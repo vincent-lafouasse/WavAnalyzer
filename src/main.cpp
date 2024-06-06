@@ -103,6 +103,10 @@ int main()
     assert(read_u32(bytes, index) == 16);  // fmt chunk size
     constexpr u16 uncompressed_pcm = 1;
     assert(read_u16(bytes, index) == uncompressed_pcm);
+
     u16 n_channels = read_u16(bytes, index);
-    std::cout << +n_channels << " channels\n";
+    std::cout << n_channels << " channels\n";
+
+    u32 sample_rate = read_u32(bytes, index);
+    std::cout << "sample rate: " << sample_rate << '\n';
 }
