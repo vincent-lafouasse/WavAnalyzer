@@ -23,9 +23,7 @@ static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
     index += data_size + (data_size % 2 == 1);
 }
 
-i64 read_sample(const std::vector<Byte>& bytes,
-                    size_t start,
-                    u8 sample_size)
+i64 read_sample(const std::vector<Byte>& bytes, size_t start, u8 sample_size)
 {
     if (sample_size == 1)
         return bytes[start];
@@ -38,8 +36,8 @@ i64 read_sample(const std::vector<Byte>& bytes,
 }
 
 std::vector<std::vector<i64>> parse_channels(const std::vector<Byte>& bytes,
-                                                 size_t start,
-                                                 SignalMetadata metadata)
+                                             size_t start,
+                                             SignalMetadata metadata)
 {
     const u8 sample_size = metadata.bit_depth / 8;
     const u32 channel_size = metadata.data_size / metadata.n_channels;
