@@ -32,6 +32,18 @@ static u32 read_u32(const std::vector<Byte>& bytes, size_t& index)
     return out;
 }
 
+static u16 read_u16(const std::vector<Byte>& bytes, size_t& index)
+{
+    assert(index + 2 < bytes.size());
+
+    u16 out = 0;
+    for (size_t i = 0; i < 2; i++, index++)
+    {
+        out += static_cast<u16>(bytes[index]) << (8 * i);
+    }
+    return out;
+}
+
 static u8 read_u8(const std::vector<Byte>& bytes, size_t& index)
 {
     assert(index < bytes.size());
@@ -89,6 +101,8 @@ int main()
     FourCC fmt_tag = read_four_cc(bytes, index);
     assert(fourcc_eq(fmt_tag, "fmt "));
     assert(read_u32(bytes, index) == 16);  // fmt chunk size
-    constexpr u8 uncompressed_pcm = 1;
-    assert(read_u8(bytes, index) == uncompressed_pcm);
+    constexpr u16 uncompressed_pcm = 1;
+    assert(read_u16(bytes, index) == uncompressed_pcm);
+    u16 n_channels = read_u16(bytes, index);
+    std::cout << +n_channels << " channels\n";
 }
