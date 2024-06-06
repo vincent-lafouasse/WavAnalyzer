@@ -56,6 +56,7 @@ struct SignalMetadata
     u16 n_channels;
     u32 sample_rate;
     SampleFormat sample_format;
+    u32 size;
 };
 
 const char* wav_path = "./wav/brk_upfront amen_1 bar_158 bpm.wav";
@@ -114,4 +115,12 @@ int main()
 
     metadata.sample_format = bit_depth_to_format(bit_depth);
     log_sample_format(metadata.sample_format);
+
+    FourCC data_tag = read_four_cc(bytes, index);
+    assert(fourcc_eq(data_tag, "data"));
+    metadata.size = read_u32(bytes, index);
+    
+    std::cout << metadata.size << " bytes of data\n";
+    
+    std::vector<std::vector<int64_t>> raw_signals;
 }
