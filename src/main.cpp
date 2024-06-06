@@ -23,7 +23,21 @@ static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
     index += data_size + (data_size % 2 == 1);
 }
 
-std::vector<std::vector<int64_t>> parse_channels(const std::vector<Byte>& bytes,
+i64 read_sample(const std::vector<Byte>& bytes,
+                    size_t start,
+                    u8 sample_size)
+{
+    if (sample_size == 1)
+        return bytes[start];
+    if (sample_size == 2)
+    {
+        i16 out = bytes[start] | bytes[start + 1] << 8;
+        return static_cast<i64>(out);
+    }
+    return 0;
+}
+
+std::vector<std::vector<i64>> parse_channels(const std::vector<Byte>& bytes,
                                                  size_t start,
                                                  SignalMetadata metadata)
 {
@@ -31,7 +45,7 @@ std::vector<std::vector<int64_t>> parse_channels(const std::vector<Byte>& bytes,
     const u32 channel_size = metadata.data_size / metadata.n_channels;
     std::cout << "sample size " << sample_size;
     std::cout << "\nchannel size: " << channel_size << '\n';
-    std::vector<std::vector<int64_t>> channels;
+    std::vector<std::vector<i64>> channels;
 
     return channels;
 }
@@ -88,6 +102,6 @@ int main()
 
     std::cout << metadata.data_size << " bytes of data\n";
 
-    std::vector<std::vector<int64_t>> raw_signals =
+    std::vector<std::vector<i64>> raw_signals =
         parse_channels(bytes, index, metadata);
 }
