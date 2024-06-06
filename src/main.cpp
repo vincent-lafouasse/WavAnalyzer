@@ -38,6 +38,6 @@ int main()
     size_t index = 0;
 
     FourCC wave_tag = read_four_cc(bytes, index);
-    assert(fourcc_eq(wave_tag, "WAVE"));
+    assert(fourcc_eq(wave_tag, "RIFF"));
     assert(index == 4);
 }
