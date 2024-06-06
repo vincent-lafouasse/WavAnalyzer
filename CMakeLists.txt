@@ -10,6 +10,8 @@ target_sources(WavAnalyzer PRIVATE
 	src/main.cpp
 	src/read.cpp
 	src/read.h
+	src/FourCC.cpp
+	src/FourCC.h
 	src/types.h
 )
 set_target_properties(WavAnalyzer PROPERTIES COMPILE_FLAGS "-Wall -Wextra -Wpedantic -g3")

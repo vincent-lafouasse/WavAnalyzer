@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include "FourCC.h"
 #include "types.h"
 
 u32 read_u32(const std::vector<Byte>& bytes, size_t& index);

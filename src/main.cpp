@@ -2,26 +2,11 @@
 #include <iostream>
 #include <vector>
 
+#include "FourCC.h"
 #include "read.h"
 #include "types.h"
 
 const char* wav_path = "./wav/brk_upfront amen_1 bar_158 bpm.wav";
-
-static bool fourcc_eq(FourCC four_cc, const char* pattern)
-{
-    for (size_t i = 0; i < 4 && pattern[i]; i++)
-    {
-        if (four_cc[i] != pattern[i])
-            return false;
-    }
-    return true;
-}
-
-[[maybe_unused]] static void log_fourcc(FourCC four_cc)
-{
-    for (int i = 0; i < 4; i++)
-        std::cout << four_cc[i];
-}
 
 static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
 {
