@@ -51,7 +51,7 @@ void log_sample_format(SampleFormat format)
     }
 }
 
-struct WavMetadata
+struct SignalMetadata
 {
     u16 n_channels;
     u32 sample_rate;
@@ -74,7 +74,7 @@ int main()
 
     size_t index = 0;
 
-    WavMetadata metadata;
+    SignalMetadata metadata;
 
     // riff chunk
     FourCC riff_tag = read_four_cc(bytes, index);
