@@ -109,7 +109,7 @@ int main()
     u16 bit_depth = read_u16(bytes, index);
     std::cout << "sample size: " << sample_size;
     std::cout << "\nbit depth: " << bit_depth << '\n';
-    assert(sample_size * 8 == bit_depth);
+    assert(sample_size * 8 == bit_depth * metadata.n_channels);
 
     metadata.sample_format = bit_depth_to_format(bit_depth);
     log_sample_format(metadata.sample_format);
