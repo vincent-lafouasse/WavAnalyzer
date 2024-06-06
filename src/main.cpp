@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 
-const char* wav_path = "../wav/brk_upfront amen_1 bar_158 bpm.wav";
+const char* wav_path = "./wav/brk_upfront amen_1 bar_158 bpm.wav";
 
 int main()
 {
