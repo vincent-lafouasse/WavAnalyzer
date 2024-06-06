@@ -51,23 +51,16 @@ static FourCC read_four_cc(const std::vector<Byte>& bytes, size_t& index)
     return out;
 }
 
-static void log_fourcc(FourCC four_cc)
+[[maybe_unused]] static void log_fourcc(FourCC four_cc)
 {
     for (int i = 0; i < 4; i++)
         std::cout << four_cc[i];
 }
 
-static void skip_junk_chunk(const std::vector<Byte>& bytes, size_t& index)
+static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
 {
-    FourCC tag = read_four_cc(bytes, index);
-    if (!fourcc_eq(tag, "JUNK"))
-    {
-        index -= 4;
-        return ;
-    }
-
+    index += 4;  // skip tag
     u32 data_size = read_u32(bytes, index);
-
     index += data_size + (data_size % 2 == 1);
 }
 
@@ -89,9 +82,10 @@ int main()
     assert(fourcc_eq(wave_tag, "WAVE"));
     assert(index == 12);
 
-    skip_junk_chunk(bytes, index);
+    skip_chunk(bytes, index);  // junk chunk
+    skip_chunk(bytes, index);  // bext chunk
+    skip_chunk(bytes, index);  // fake chunk
 
     FourCC fmt_tag = read_four_cc(bytes, index);
-    log_fourcc(fmt_tag);
     assert(fourcc_eq(fmt_tag, "fmt "));
 }
