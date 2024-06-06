@@ -8,8 +8,6 @@
 
 enum class SampleFormat
 {
-    f32,
-    f64,
     u8,
     i16,
     i32,
@@ -36,6 +34,9 @@ struct WavMetadata
 {
     u16 n_channels;
     u32 sample_rate;
+    u16 sample_size;
+    u16 bit_depth;
+    SampleFormat sample_format;
 };
 
 const char* wav_path = "./wav/brk_upfront amen_1 bar_158 bpm.wav";
@@ -85,9 +86,9 @@ int main()
 
     read_u32(bytes, index);  // skip bitrate
 
-    u16 sample_size = read_u16(bytes, index);
-    std::cout << "sample size: " << sample_size << '\n';
+    metadata.sample_size = read_u16(bytes, index);
+    std::cout << "sample size: " << metadata.sample_size << '\n';
 
-    u16 bit_depth = read_u16(bytes, index);
-    std::cout << "bit depth " << bit_depth << '\n';
+    metadata.bit_depth = read_u16(bytes, index);
+    std::cout << "bit depth " << metadata.bit_depth << '\n';
 }
