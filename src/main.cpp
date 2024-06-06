@@ -35,17 +35,17 @@ i64 read_sample(const std::vector<Byte>& bytes, size_t start, u8 sample_size)
     return 0;
 }
 
-std::vector<std::vector<i64>> parse_channels(const std::vector<Byte>& bytes,
-                                             size_t start,
-                                             SignalMetadata metadata)
+std::vector<i64> parse_first_channel(const std::vector<Byte>& bytes,
+                                     size_t start,
+                                     SignalMetadata metadata)
 {
     const u8 sample_size = metadata.bit_depth / 8;
     const u32 channel_size = metadata.data_size / metadata.n_channels;
     std::cout << "sample size " << sample_size;
     std::cout << "\nchannel size: " << channel_size << '\n';
-    std::vector<std::vector<i64>> channels;
+    std::vector<i64> channel;
 
-    return channels;
+    return channel;
 }
 
 int main()
@@ -100,6 +100,5 @@ int main()
 
     std::cout << metadata.data_size << " bytes of data\n";
 
-    std::vector<std::vector<i64>> raw_signals =
-        parse_channels(bytes, index, metadata);
+    std::vector<i64> raw_channel1 = parse_first_channel(bytes, index, metadata);
 }
