@@ -1,14 +1,10 @@
-#include <array>
 #include <fstream>
 #include <iostream>
 #include <vector>
 
-#include "cool_ints.h"
+#include "types.h"
 
 const char* wav_path = "./wav/brk_upfront amen_1 bar_158 bpm.wav";
-
-typedef unsigned char Byte;
-typedef std::array<Byte, 4> FourCC;
 
 static bool fourcc_eq(FourCC four_cc, const char* pattern)
 {
