@@ -68,6 +68,14 @@ static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
     index += data_size + (data_size % 2 == 1);
 }
 
+std::vector<std::vector<int64_t>> parse_channels(const std::vector<Byte>& bytes,
+                                                 size_t start, SignalMetadata metadata)
+{
+    std::vector<std::vector<int64_t>> channels;
+
+    return channels;
+}
+
 int main()
 {
     std::ifstream input(wav_path, std::ios::binary);
