@@ -6,57 +6,12 @@
 #include "read.h"
 #include "types.h"
 
-enum class SampleFormat
-{
-    u8,
-    i16,
-    i24,
-    i32,
-};
-
-SampleFormat bit_depth_to_format(u16 bit_depth)
-{
-    switch (bit_depth)
-    {
-        case 8:
-            return SampleFormat::u8;
-        case 16:
-            return SampleFormat::i16;
-        case 24:
-            return SampleFormat::i24;
-        case 32:
-            return SampleFormat::i32;
-        default:
-            std::cout << "unrecognised bit depth " << bit_depth << '\n';
-            exit(1);
-    }
-}
-
-void log_sample_format(SampleFormat format)
-{
-    switch (format)
-    {
-        case SampleFormat::u8:
-            std::cout << "u8\n";
-            return;
-        case SampleFormat::i16:
-            std::cout << "i16\n";
-            return;
-        case SampleFormat::i24:
-            std::cout << "i24\n";
-            return;
-        case SampleFormat::i32:
-            std::cout << "i32\n";
-            return;
-    }
-}
-
 struct SignalMetadata
 {
     u16 n_channels;
     u32 sample_rate;
-    SampleFormat sample_format;
-    u32 size;
+    u16 bit_depth;
+    u32 data_size;
 };
 
 const char* wav_path = "./wav/brk_upfront amen_1 bar_158 bpm.wav";
@@ -69,8 +24,13 @@ static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
 }
 
 std::vector<std::vector<int64_t>> parse_channels(const std::vector<Byte>& bytes,
-                                                 size_t start, SignalMetadata metadata)
+                                                 size_t start,
+                                                 SignalMetadata metadata)
 {
+    const u8 sample_size = metadata.bit_depth / 8;
+    const u32 channel_size = metadata.data_size / metadata.n_channels;
+    std::cout << "sample size " << sample_size;
+    std::cout << "\nchannel size: " << channel_size << '\n';
     std::vector<std::vector<int64_t>> channels;
 
     return channels;
@@ -120,15 +80,14 @@ int main()
     std::cout << "\nbit depth: " << bit_depth << '\n';
     assert((sample_size * 8 == bit_depth * metadata.n_channels) &&
            "cannot parse _exotic_ sample format (yet)");
-
-    metadata.sample_format = bit_depth_to_format(bit_depth);
-    log_sample_format(metadata.sample_format);
+    metadata.bit_depth = bit_depth;
 
     FourCC data_tag = read_four_cc(bytes, index);
     assert(fourcc_eq(data_tag, "data"));
-    metadata.size = read_u32(bytes, index);
-    
-    std::cout << metadata.size << " bytes of data\n";
-    
-    std::vector<std::vector<int64_t>> raw_signals;
+    metadata.data_size = read_u32(bytes, index);
+
+    std::cout << metadata.data_size << " bytes of data\n";
+
+    std::vector<std::vector<int64_t>> raw_signals =
+        parse_channels(bytes, index, metadata);
 }
