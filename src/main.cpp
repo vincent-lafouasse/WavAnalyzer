@@ -55,8 +55,6 @@ struct WavMetadata
 {
     u16 n_channels;
     u32 sample_rate;
-    u16 sample_size;
-    u16 bit_depth;
     SampleFormat sample_format;
 };
 
@@ -107,11 +105,12 @@ int main()
 
     read_u32(bytes, index);  // skip bitrate
 
-    metadata.sample_size = read_u16(bytes, index);
-    std::cout << "sample size: " << metadata.sample_size << '\n';
+    u16 sample_size = read_u16(bytes, index);
+    u16 bit_depth = read_u16(bytes, index);
+    std::cout << "sample size: " << sample_size;
+    std::cout << "\nbit depth: " << bit_depth << '\n';
+    assert(sample_size * 8 == bit_depth);
 
-    metadata.bit_depth = read_u16(bytes, index);
-    std::cout << "bit depth " << metadata.bit_depth << '\n';
-    metadata.sample_format = bit_depth_to_format(metadata.bit_depth);
+    metadata.sample_format = bit_depth_to_format(bit_depth);
     log_sample_format(metadata.sample_format);
 }
