@@ -44,7 +44,8 @@ static u16 read_u16(const std::vector<Byte>& bytes, size_t& index)
     return out;
 }
 
-static u8 read_u8(const std::vector<Byte>& bytes, size_t& index)
+[[maybe_unused]] static u8 read_u8(const std::vector<Byte>& bytes,
+                                   size_t& index)
 {
     assert(index < bytes.size());
 
