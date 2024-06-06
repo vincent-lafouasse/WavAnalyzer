@@ -10,6 +10,7 @@ enum class SampleFormat
 {
     u8,
     i16,
+    i24,
     i32,
     i64,
 };
@@ -22,11 +23,37 @@ SampleFormat bit_depth_to_format(u16 bit_depth)
             return SampleFormat::u8;
         case 16:
             return SampleFormat::i16;
+        case 24:
+            return SampleFormat::i24;
         case 32:
             return SampleFormat::i32;
+        case 64:
+            return SampleFormat::i64;
         default:
             std::cout << "unrecognised bit depth " << bit_depth << '\n';
             exit(1);
+    }
+}
+
+void log_sample_format(SampleFormat format)
+{
+    switch (format)
+    {
+        case SampleFormat::u8:
+            std::cout << "u8\n";
+            return;
+        case SampleFormat::i16:
+            std::cout << "i16\n";
+            return;
+        case SampleFormat::i24:
+            std::cout << "i24\n";
+            return;
+        case SampleFormat::i32:
+            std::cout << "i32\n";
+            return;
+        case SampleFormat::i64:
+            std::cout << "i64\n";
+            return;
     }
 }
 
@@ -91,4 +118,6 @@ int main()
 
     metadata.bit_depth = read_u16(bytes, index);
     std::cout << "bit depth " << metadata.bit_depth << '\n';
+    metadata.sample_format = bit_depth_to_format(metadata.bit_depth);
+    log_sample_format(metadata.sample_format);
 }
