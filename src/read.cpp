@@ -42,3 +42,12 @@ FourCC read_four_cc(const std::vector<Byte>& bytes, size_t& index)
     }
     return out;
 }
+
+Int24 read_i24(const std::vector<Byte>& bytes, size_t& index)
+{
+    Int24 out;
+    out.bytes[0] = bytes[index++];
+    out.bytes[1] = bytes[index++];
+    out.bytes[2] = bytes[index++];
+    return out;
+}

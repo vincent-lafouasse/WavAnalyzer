@@ -1,9 +1,7 @@
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
-#include <vector>
 #include <array>
+#include <cstdint>
 
 typedef uint8_t u8;
 typedef uint16_t u16;
@@ -17,13 +15,10 @@ typedef int64_t i64;
 
 typedef unsigned char Byte;
 
-class Int24
+struct Int24
 {
-   public:
-    static Int24 read_from_bytes(const std::vector<Byte>& bytes, size_t index);
     i64 to_i64() const;
     double to_double() const;
 
-   private:
-   std::array<Byte, 3> bytes;
+    std::array<Byte, 3> bytes;
 };
