@@ -32,6 +32,13 @@ static u32 read_u32(const std::vector<Byte>& bytes, size_t& index)
     return out;
 }
 
+static u8 read_u8(const std::vector<Byte>& bytes, size_t& index)
+{
+    assert(index < bytes.size());
+
+    return bytes[index++];
+}
+
 static FourCC read_four_cc(const std::vector<Byte>& bytes, size_t& index)
 {
     assert(index + 4 < bytes.size());
@@ -44,6 +51,26 @@ static FourCC read_four_cc(const std::vector<Byte>& bytes, size_t& index)
     return out;
 }
 
+static void log_fourcc(FourCC four_cc)
+{
+    for (int i = 0; i < 4; i++)
+        std::cout << four_cc[i];
+}
+
+static void skip_junk_chunk(const std::vector<Byte>& bytes, size_t& index)
+{
+    FourCC tag = read_four_cc(bytes, index);
+    if (!fourcc_eq(tag, "JUNK"))
+    {
+        index -= 4;
+        return ;
+    }
+
+    u32 data_size = read_u32(bytes, index);
+
+    index += data_size + (data_size % 2 == 1);
+}
+
 int main()
 {
     std::ifstream input(wav_path, std::ios::binary);
@@ -51,10 +78,20 @@ int main()
 
     size_t index = 0;
 
-    FourCC wave_tag = read_four_cc(bytes, index);
-    assert(fourcc_eq(wave_tag, "RIFF"));
+    // riff chunk
+    FourCC riff_tag = read_four_cc(bytes, index);
+    assert(fourcc_eq(riff_tag, "RIFF"));
     assert(index == 4);
-
     assert(read_u32(bytes, index) + 8 == bytes.size());
     assert(index == 8);
+
+    FourCC wave_tag = read_four_cc(bytes, index);
+    assert(fourcc_eq(wave_tag, "WAVE"));
+    assert(index == 12);
+
+    skip_junk_chunk(bytes, index);
+
+    FourCC fmt_tag = read_four_cc(bytes, index);
+    log_fourcc(fmt_tag);
+    assert(fourcc_eq(fmt_tag, "fmt "));
 }
