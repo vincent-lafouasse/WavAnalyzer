@@ -88,4 +88,7 @@ int main()
 
     FourCC fmt_tag = read_four_cc(bytes, index);
     assert(fourcc_eq(fmt_tag, "fmt "));
+    assert(read_u32(bytes, index) == 16);  // fmt chunk size
+    constexpr u8 uncompressed_pcm = 1;
+    assert(read_u8(bytes, index) == uncompressed_pcm);
 }
