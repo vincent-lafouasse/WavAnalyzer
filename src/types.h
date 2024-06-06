@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <vector>
+#include <array>
 
 typedef uint8_t u8;
 typedef uint16_t u16;
@@ -24,5 +25,5 @@ class Int24
     double to_double() const;
 
    private:
-    Byte internals[3];
+   std::array<Byte, 3> bytes;
 };
