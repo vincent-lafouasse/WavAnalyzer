@@ -82,4 +82,12 @@ int main()
 
     metadata.sample_rate = read_u32(bytes, index);
     std::cout << "sample rate: " << metadata.sample_rate << '\n';
+
+    read_u32(bytes, index);  // skip bitrate
+
+    u16 sample_size = read_u16(bytes, index);
+    std::cout << "sample size: " << sample_size << '\n';
+
+    u16 bit_depth = read_u16(bytes, index);
+    std::cout << "bit depth " << bit_depth << '\n';
 }
