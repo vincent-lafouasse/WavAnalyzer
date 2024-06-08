@@ -19,7 +19,7 @@ Track Track::from_wav(const char* path)
 
     RawTrack raw_track = RawTrack::from_bytes(bytes, index, metadata);
 
-    return Track::from_raw_track(raw_track);
+    return raw_track.to_track();
 }
 
 static TrackMetadata parse_header(const std::vector<Byte>& bytes, size_t& index)

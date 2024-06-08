@@ -36,16 +36,16 @@ float sample_to_float(i64 sample, u8 sample_size)
     }
 }
 
-Track Track::from_raw_track(const RawTrack& raw_track)
+Track RawTrack::to_track()
 {
     Track track;
-    track.metadata = raw_track.metadata;
+    track.metadata = metadata;
 
-    for (i64 sample : raw_track.left)
+    for (i64 sample : left)
         track.left.push_back(
             sample_to_float(sample, track.metadata.bit_depth / 8));
 
-    for (i64 sample : raw_track.right)
+    for (i64 sample : right)
         track.right.push_back(
             sample_to_float(sample, track.metadata.bit_depth / 8));
 
