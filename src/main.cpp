@@ -4,12 +4,17 @@
 
 #include "FourCC.h"
 #include "read.h"
-#include "test/test.h"
 #include "types.h"
 
-#define TESTING 1
+#define TESTING 0
+#if TESTING
+#include "test/test.h"
+#endif
 
-struct SignalMetadata
+typedef std::vector<i32> RawSignal;
+typedef std::vector<float> Signal;
+
+struct TrackMetadata
 {
     u16 n_channels;
     u32 sample_rate;
@@ -38,15 +43,15 @@ i64 read_sample(const std::vector<Byte>& bytes, size_t start, u8 sample_size)
     return 0;
 }
 
-std::vector<i64> parse_first_channel(const std::vector<Byte>& bytes,
-                                     size_t start,
-                                     SignalMetadata metadata)
+RawSignal parse_first_channel(const std::vector<Byte>& bytes,
+                              size_t start,
+                              TrackMetadata metadata)
 {
     const u8 sample_size = metadata.bit_depth / 8;
     const u32 channel_size = metadata.data_size / metadata.n_channels;
     std::cout << "sample size " << sample_size;
     std::cout << "\nchannel size: " << channel_size << '\n';
-    std::vector<i64> channel;
+    RawSignal channel;
 
     return channel;
 }
@@ -62,7 +67,7 @@ int main()
 
     size_t index = 0;
 
-    SignalMetadata metadata;
+    TrackMetadata metadata;
 
     // riff chunk
     FourCC riff_tag = read_four_cc(bytes, index, IndexPolicy::Advance);
@@ -108,5 +113,5 @@ int main()
 
     std::cout << metadata.data_size << " bytes of data\n";
 
-    std::vector<i64> raw_channel1 = parse_first_channel(bytes, index, metadata);
+    RawSignal raw_channel1 = parse_first_channel(bytes, index, metadata);
 }
