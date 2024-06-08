@@ -1,5 +1,13 @@
 #include "read.h"
 
+i32 read_sample(u8 bit_depth,
+                const std::vector<Byte>& bytes,
+                size_t& index,
+                IndexPolicy policy)
+{
+    return 0;
+}
+
 u32 read_u32(const std::vector<Byte>& bytes, size_t& index, IndexPolicy policy)
 {
     assert(index + 4 < bytes.size());

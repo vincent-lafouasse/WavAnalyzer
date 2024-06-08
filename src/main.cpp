@@ -74,7 +74,6 @@ RawTrack parse_stereo_track(const std::vector<Byte>& bytes,
     {
         if (i % 2 == 0)
         {
-            
         }
         else
         {
