@@ -219,15 +219,8 @@ int main()
     RawTrack raw_track = parse_raw_track(bytes, index, metadata);
     std::cout << raw_track.left.size() << " ";
     std::cout << raw_track.right.size() << " ";
-    for (float sample : raw_track.left)
-    {
-        std::cout << sample << ' ';
-        std::cout.flush();
-    }
 
     Track track = Track::from_raw_track(raw_track);
-    std::cout << track.left.size() << " ";
-    std::cout << track.right.size() << " ";
 
     bytes.clear();
     raw_track.left.clear();

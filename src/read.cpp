@@ -13,7 +13,10 @@ i64 read_sample(u8 sample_size,
         case 1:
             return read_u8(bytes, index, policy);
         case 3:
-            return read_i24(bytes, index, policy).to_i64();
+        {
+            Int24 sample = read_i24(bytes, index, policy);
+            return sample.to_i64();
+        }
     }
 
     std::cout << "Unrecognised sample size: " << sample_size << " bytes\n";
