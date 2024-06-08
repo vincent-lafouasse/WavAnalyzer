@@ -6,11 +6,21 @@
 
 /*
  * the WAV format serializes data as little endian
-*/
+ */
 
-u32 read_u32(const std::vector<Byte>& bytes, size_t& index);
-u16 read_u16(const std::vector<Byte>& bytes, size_t& index);
-u8 read_u8(const std::vector<Byte>& bytes, size_t& index);
-FourCC read_four_cc(const std::vector<Byte>& bytes, size_t& index);
+enum class IndexPolicy
+{
+    Advance,
+    Peek,
+};
 
-Int24 read_i24(const std::vector<Byte>& bytes, size_t& index);
+u32 read_u32(const std::vector<Byte>& bytes, size_t& index, IndexPolicy policy);
+u16 read_u16(const std::vector<Byte>& bytes, size_t& index, IndexPolicy policy);
+u8 read_u8(const std::vector<Byte>& bytes, size_t& index, IndexPolicy policy);
+FourCC read_four_cc(const std::vector<Byte>& bytes,
+                    size_t& index,
+                    IndexPolicy policy);
+
+Int24 read_i24(const std::vector<Byte>& bytes,
+               size_t& index,
+               IndexPolicy policy);
