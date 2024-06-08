@@ -8,6 +8,7 @@
 const char* wav_path = "./wav/hat_short.wav";
 constexpr size_t sample_rate = 48000;
 constexpr size_t buffer_size = 512;
+constexpr size_t n_channels = 1;
 
 int do_nothing_callback(const void* input_buffer,
                         void* output_buffer,
@@ -20,7 +21,7 @@ int main()
 {
     Track track = Track::from_wav(wav_path);
 
-    constexpr OutputStreamConfig cfg = {sample_rate, buffer_size, 2};
+    constexpr OutputStreamConfig cfg = {sample_rate, buffer_size, n_channels};
 
     OutputStream stream(cfg);
     stream.open(&do_nothing_callback, NULL);
