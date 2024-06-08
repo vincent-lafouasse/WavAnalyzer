@@ -8,11 +8,16 @@ set(CMAKE_CXX_STANDARD 17)
 add_executable(WavAnalyzer)
 target_sources(WavAnalyzer PRIVATE
 	src/main.cpp
+
 	src/read.cpp
 	src/read.h
+
 	src/FourCC.cpp
 	src/FourCC.h
+
+	src/types.cpp
 	src/types.h
+
 	src/test/test.cpp
 	src/test/test.h
 )

@@ -17,7 +17,7 @@ typedef unsigned char Byte;
 
 struct Int24
 {
-    i64 to_i64() const;
+    i32 to_i32() const;
     double to_double() const;
 
     std::array<Byte, 3> little_endian_bytes;
