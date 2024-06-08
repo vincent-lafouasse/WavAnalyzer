@@ -37,9 +37,10 @@ float sample_to_float(i64 sample, u8 sample_size)
 {
     switch (sample_size)
     {
-        case 1: {
+        case 1:
+        {
             // unipolar -> float bipolar
-            sample -= 128; 
+            sample -= 128;
             // clamp
             if (sample <= -127)
                 sample = -127;
@@ -47,7 +48,8 @@ float sample_to_float(i64 sample, u8 sample_size)
                 sample = 127;
             return sample / 127.0;
         };
-        case 2: {
+        case 2:
+        {
             // clamp
             if (sample <= 1 - (1 << 23))
                 sample = 1 - (1 << 23);
@@ -55,7 +57,8 @@ float sample_to_float(i64 sample, u8 sample_size)
                 sample = (1 << 23) - 1;
             return sample / static_cast<float>((1 << 23) - 1);
         };
-        default : {
+        default:
+        {
             std::cout << "cant handle sample size " << sample_size << std::endl;
             std::exit(0);
         };
