@@ -20,5 +20,5 @@ struct Int24
     i64 to_i64() const;
     double to_double() const;
 
-    std::array<Byte, 3> bytes;
+    std::array<Byte, 3> little_endian_bytes;
 };

@@ -60,9 +60,9 @@ Int24 read_i24(const std::vector<Byte>& bytes,
                IndexPolicy policy)
 {
     Int24 out;
-    out.bytes[0] = bytes[index];
-    out.bytes[1] = bytes[index + 1];
-    out.bytes[2] = bytes[index + 2];
+    out.little_endian_bytes[0] = bytes[index];
+    out.little_endian_bytes[1] = bytes[index + 1];
+    out.little_endian_bytes[2] = bytes[index + 2];
     if (policy == IndexPolicy::Advance)
         index += 3;
     return out;
