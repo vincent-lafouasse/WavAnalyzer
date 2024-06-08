@@ -34,4 +34,7 @@ static void test_i24_positive()
 
     i = {{0x10, 0, 0}};
     assert(i.to_i32() == 16);
+
+    i = {{0xFF, 0xFF, 0x7F}};  // int max
+    assert(i.to_i32() == (1 << 23) - 1);
 }
