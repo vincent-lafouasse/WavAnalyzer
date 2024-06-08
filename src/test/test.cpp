@@ -17,7 +17,7 @@ void run_tests_and_exit()
 static void test_i24_positive();
 static void test_i24_negative();
 
-static void try_i24(Int24 i, i32 expected);
+static void try_i24(Int24 i, i64 expected);
 
 static void test_i24()
 {
@@ -53,11 +53,11 @@ static void test_i24_negative()
     try_i24(i, -128);
 }
 
-static void try_i24(Int24 i, i32 expected)
+static void try_i24(Int24 i, i64 expected)
 {
-    if (i.to_i32() != expected)
+    if (i.to_i64() != expected)
     {
-        std::cout << "Error, expected " << expected << " was " << i.to_i32()
+        std::cout << "Error, expected " << expected << " was " << i.to_i64()
                   << std::endl;
         std::exit(1);
     }

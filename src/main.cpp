@@ -11,7 +11,7 @@
 #include "test/test.h"
 #endif
 
-typedef std::vector<i32> RawSignal;
+typedef std::vector<i64> RawSignal;
 typedef std::vector<float> Signal;
 
 struct TrackMetadata

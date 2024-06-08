@@ -1,6 +1,6 @@
 #include "types.h"
 
-i32 Int24::to_i32() const
+i64 Int24::to_i64() const
 {
     u32 buffer = 0;
 
@@ -11,7 +11,7 @@ i32 Int24::to_i32() const
     buffer =
         little_endian_bytes[0] | little_endian_bytes[1] << 8 | third_byte << 16;
 
-    i32 out = *((i32*)&buffer);
+    i64 out = *((i64*)&buffer);
 
     if (top_bit)
         out -= (1 << 23);
