@@ -1,6 +1,5 @@
 #include "test.h"
 
-#include <cassert>
 #include <cstdlib>
 #include <iostream>
 
@@ -59,4 +58,5 @@ static void try_i24(Int24 i, i32 expected)
                   << std::endl;
         std::exit(1);
     }
+    std::cout << "Ok for " << expected << std::endl; 
 }
