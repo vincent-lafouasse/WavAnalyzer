@@ -4,7 +4,10 @@
 
 #include "FourCC.h"
 #include "read.h"
+#include "test/test.h"
 #include "types.h"
+
+#define TESTING 1
 
 struct SignalMetadata
 {
@@ -50,6 +53,10 @@ std::vector<i64> parse_first_channel(const std::vector<Byte>& bytes,
 
 int main()
 {
+#if TESTING
+    run_tests_and_exit();
+#endif
+
     std::ifstream input(wav_path, std::ios::binary);
     std::vector<Byte> bytes(std::istreambuf_iterator<char>(input), {});
 
