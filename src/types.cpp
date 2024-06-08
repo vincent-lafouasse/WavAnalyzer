@@ -11,7 +11,7 @@ i64 Int24::to_i64() const
     buffer =
         little_endian_bytes[0] | little_endian_bytes[1] << 8 | third_byte << 16;
 
-    i64 out = *((i64*)&buffer);
+    i64 out = buffer;
 
     if (top_bit)
         out -= (1 << 23);
