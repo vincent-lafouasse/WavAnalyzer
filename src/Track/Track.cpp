@@ -1,115 +1,70 @@
 #include "Track.h"
 
-#include <iostream>
+#include <fstream>
+#include "FourCC.h"
+#include "RawTrack.h"
 #include "read.h"
 
-float sample_to_float(i64 sample, u8 sample_size)
+static void skip_chunk(const std::vector<Byte>& bytes, size_t& index);
+static TrackMetadata parse_header(const std::vector<Byte>& bytes,
+                                  size_t& index);
+
+Track Track::from_wav(const char* path)
 {
-    switch (sample_size)
-    {
-        case 1:
-        {
-            // unipolar -> float bipolar
-            sample -= 128;
-            // clamp
-            if (sample <= -127)
-                sample = -127;
-            if (sample >= 127)
-                sample = 127;
-            return sample / 127.0;
-        };
-        case 3:
-        {
-            constexpr i64 i24_max = (1 << 23) - 1;
-            // clamp
-            if (sample <= -i24_max)
-                sample = -i24_max;
-            if (sample >= i24_max)
-                sample = i24_max;
-            return sample / static_cast<float>(i24_max);
-        };
-        default:
-        {
-            std::cout << "cant handle sample size " << sample_size << std::endl;
-            std::exit(0);
-        };
-    }
+    std::ifstream input(path, std::ios::binary);
+
+    std::vector<Byte> bytes(std::istreambuf_iterator<char>(input), {});
+    size_t index = 0;
+
+    TrackMetadata metadata = parse_header(bytes, index);
+
+    RawTrack raw_track = RawTrack::from_bytes(bytes, index, metadata);
+
+    return raw_track.to_track();
 }
 
-Track RawTrack::to_track()
+static TrackMetadata parse_header(const std::vector<Byte>& bytes, size_t& index)
 {
-    Track track;
-    track.metadata = metadata;
+    TrackMetadata metadata;
 
-    for (i64 sample : left)
-        track.left.push_back(
-            sample_to_float(sample, track.metadata.bit_depth / 8));
+    // riff chunk
+    assert(fourcc_eq(read_four_cc(bytes, index, IndexPolicy::Advance), "RIFF"));
+    assert(read_u32(bytes, index, IndexPolicy::Advance) + 8 == bytes.size());
 
-    for (i64 sample : right)
-        track.right.push_back(
-            sample_to_float(sample, track.metadata.bit_depth / 8));
+    assert(fourcc_eq(read_four_cc(bytes, index, IndexPolicy::Advance), "WAVE"));
 
-    return track;
+    while (!fourcc_eq(read_four_cc(bytes, index, IndexPolicy::Peek), "fmt "))
+        skip_chunk(bytes, index);
+
+    assert(fourcc_eq(read_four_cc(bytes, index, IndexPolicy::Advance), "fmt "));
+    assert(read_u32(bytes, index, IndexPolicy::Advance) ==
+           16);  // fmt chunk size
+    constexpr u16 uncompressed_pcm = 1;
+    assert(read_u16(bytes, index, IndexPolicy::Advance) == uncompressed_pcm);
+
+    metadata.n_channels = read_u16(bytes, index, IndexPolicy::Advance);
+    metadata.sample_rate = read_u32(bytes, index, IndexPolicy::Advance);
+
+    read_u32(bytes, index, IndexPolicy::Advance);  // skip bitrate
+
+    u16 sample_size = read_u16(bytes, index, IndexPolicy::Advance);
+    u16 bit_depth = read_u16(bytes, index, IndexPolicy::Advance);
+    assert((sample_size * 8 == bit_depth * metadata.n_channels) &&
+           "cannot parse _exotic_ sample format (yet)");
+    metadata.bit_depth = bit_depth;
+
+    while (!fourcc_eq(read_four_cc(bytes, index, IndexPolicy::Peek), "data"))
+        skip_chunk(bytes, index);
+
+    assert(fourcc_eq(read_four_cc(bytes, index, IndexPolicy::Advance), "data"));
+    metadata.data_size = read_u32(bytes, index, IndexPolicy::Advance);
+
+    return metadata;
 }
 
-RawTrack parse_mono_track(const std::vector<Byte>& bytes,
-                          size_t start,
-                          TrackMetadata metadata)
+static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
 {
-    RawTrack track;
-    track.metadata = metadata;
-
-    const u8 sample_size = metadata.bit_depth / 8;
-    const u32 n_samples = metadata.data_size / sample_size;
-
-    for (u32 i = 0; i < n_samples; i++)
-        track.left.push_back(
-            read_sample(sample_size, bytes, start, IndexPolicy::Advance));
-    track.right.clear();
-    return track;
-}
-
-RawTrack parse_stereo_track(const std::vector<Byte>& bytes,
-                            size_t start,
-                            TrackMetadata metadata)
-{
-    RawTrack track;
-    track.metadata = metadata;
-
-    const u8 sample_size = metadata.bit_depth / 8;
-    const u32 n_samples = metadata.data_size / sample_size;
-
-    for (u32 i = 0; i < n_samples; i++)
-    {
-        if (i % 2 == 0)
-        {
-            track.left.push_back(
-                read_sample(sample_size, bytes, start, IndexPolicy::Advance));
-        }
-        else
-        {
-            track.right.push_back(
-                read_sample(sample_size, bytes, start, IndexPolicy::Advance));
-        }
-    }
-
-    return track;
-}
-
-RawTrack RawTrack::from_bytes(const std::vector<Byte>& bytes,
-                              size_t start,
-                              TrackMetadata metadata)
-{
-    const u8 sample_size = metadata.bit_depth / 8;
-    const u32 channel_size = metadata.data_size / metadata.n_channels;
-    std::cout << "sample size " << sample_size;
-    std::cout << "\nchannel size: " << channel_size << '\n';
-
-    if (metadata.n_channels == 1)
-        return parse_mono_track(bytes, start, metadata);
-    if (metadata.n_channels == 2)
-        return parse_stereo_track(bytes, start, metadata);
-
-    std::cout << "can only parse mono and stereo data for now\n";
-    exit(0);
+    index += 4;  // skip tag
+    u32 data_size = read_u32(bytes, index, IndexPolicy::Advance);
+    index += data_size + (data_size % 2 == 1);
 }
