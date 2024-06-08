@@ -62,9 +62,13 @@ RawTrack parse_stereo_track(const std::vector<Byte>& bytes,
     {
         if (i % 2 == 0)
         {
+            track.left.push_back(
+                read_sample(sample_size, bytes, start, IndexPolicy::Advance));
         }
         else
         {
+            track.right.push_back(
+                read_sample(sample_size, bytes, start, IndexPolicy::Advance));
         }
     }
 
