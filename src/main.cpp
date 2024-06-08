@@ -11,9 +11,6 @@
 #include "test/test.h"
 #endif
 
-typedef std::vector<i64> RawSignal;
-typedef std::vector<float> Signal;
-
 struct TrackMetadata
 {
     u16 n_channels;
@@ -24,8 +21,8 @@ struct TrackMetadata
 
 struct RawTrack
 {
-    RawSignal left;
-    RawSignal right;
+    std::vector<i64> left;
+    std::vector<i64> right;
     TrackMetadata metadata;
 };
 
