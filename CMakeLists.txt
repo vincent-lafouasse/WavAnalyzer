@@ -17,9 +17,8 @@ target_sources(WavAnalyzer PRIVATE
 	src/Track/read.h
 	src/Track/FourCC.cpp
 	src/Track/FourCC.h
-
-	src/types.cpp
-	src/types.h
+	src/Track/types.cpp
+	src/Track/types.h
 
 	src/test/test.cpp
 	src/test/test.h
