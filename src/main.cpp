@@ -1,10 +1,4 @@
-#include <iostream>
-#include <vector>
-
-#include "FourCC.h"
 #include "Track.h"
-#include "read.h"
-#include "types.h"
 
 #define TESTING 0
 #if TESTING
