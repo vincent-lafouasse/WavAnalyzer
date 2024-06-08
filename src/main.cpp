@@ -50,12 +50,13 @@ float sample_to_float(i64 sample, u8 sample_size)
         };
         case 2:
         {
+            constexpr i64 i24_max = (1 << 23) - 1;
             // clamp
-            if (sample <= 1 - (1 << 23))
-                sample = 1 - (1 << 23);
-            if (sample >= (1 << 23) - 1)
-                sample = (1 << 23) - 1;
-            return sample / static_cast<float>((1 << 23) - 1);
+            if (sample <= -i24_max)
+                sample = -i24_max;
+            if (sample >= i24_max)
+                sample = i24_max;
+            return sample / static_cast<float>(i24_max);
         };
         default:
         {
