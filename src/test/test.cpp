@@ -16,10 +16,12 @@ void run_tests_and_exit()
 }
 
 static void test_i24_positive();
+static void test_i24_negative();
 
 static void test_i24()
 {
     test_i24_positive();
+    test_i24_negative();
 }
 
 static void test_i24_positive()
@@ -37,4 +39,12 @@ static void test_i24_positive()
 
     i = {{0xFF, 0xFF, 0x7F}};  // int max
     assert(i.to_i32() == (1 << 23) - 1);
+}
+
+static void test_i24_negative()
+{
+    Int24 i;
+
+    i = {{0xFF, 0xFF, 0xFF}};
+    assert(i.to_i32() == -1);
 }
