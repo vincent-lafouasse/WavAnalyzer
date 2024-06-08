@@ -48,6 +48,9 @@ static void test_i24_negative()
 
     i = {{0xFF, 0xFF, 0xFF}};
     try_i24(i, -1);
+
+    i = {{0x80, 0xFF, 0xFF}};
+    try_i24(i, -128);
 }
 
 static void try_i24(Int24 i, i32 expected)
