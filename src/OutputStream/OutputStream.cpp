@@ -6,22 +6,6 @@
 static void check_error(PaError err);
 static int query_output_device(int n_channels);
 
-int do_nothing_callback(const void* input_buffer,
-                        void* output_buffer,
-                        unsigned long buffer_size,
-                        const PaStreamCallbackTimeInfo* time_info,
-                        PaStreamCallbackFlags status_flags,
-                        void* user_data)
-{
-    (void)input_buffer;
-    (void)output_buffer;
-    (void)buffer_size;
-    (void)time_info;
-    (void)status_flags;
-    (void)user_data;
-    return 0;
-}
-
 OutputStream::OutputStream(OutputStreamConfig stream_config)
 {
     check_error(Pa_Initialize());
