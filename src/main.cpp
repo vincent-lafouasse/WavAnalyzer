@@ -45,6 +45,13 @@ RawTrack parse_mono_track(const std::vector<Byte>& bytes,
     RawTrack track;
     track.metadata = metadata;
 
+    const u8 sample_size = metadata.bit_depth / 8;
+    const u32 n_samples = metadata.data_size / sample_size;
+
+    for (u32 i = 0; i < n_samples; i++)
+        track.left.push_back(
+            read_sample(sample_size, bytes, start, IndexPolicy::Advance));
+    track.right.clear();
     return track;
 }
 
@@ -157,4 +164,6 @@ int main()
     }
 
     RawTrack raw_track = parse_raw_track(bytes, index, metadata);
+    std::cout << raw_track.left.size() << " ";
+    std::cout << raw_track.right.size() << " ";
 }
