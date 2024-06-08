@@ -9,15 +9,13 @@ add_executable(WavAnalyzer)
 target_sources(WavAnalyzer PRIVATE
 	src/main.cpp
 
-	src/read.cpp
-	src/read.h
-
-	src/FourCC.cpp
-	src/FourCC.h
-
-	src/Track.cpp
-	src/load_track.cpp
-	src/Track.h
+	src/Track/read.cpp
+	src/Track/read.h
+	src/Track/FourCC.cpp
+	src/Track/FourCC.h
+	src/Track/Track.cpp
+	src/Track/load_track.cpp
+	src/Track/Track.h
 
 	src/types.cpp
 	src/types.h
