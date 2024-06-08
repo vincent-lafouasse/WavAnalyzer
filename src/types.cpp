@@ -14,7 +14,7 @@ i32 Int24::to_i32() const
     i32 out = *((i32*)&buffer);
 
     if (top_bit)
-        return out - (1 << 23);
-    else
-        return out;
+        out -= (1 << 23);
+
+    return out;
 }
