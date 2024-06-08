@@ -28,6 +28,7 @@ struct RawTrack
 
 struct Track
 {
+    static Track from_raw_track(const RawTrack& raw_track);
     std::vector<float> left;
     std::vector<float> right;
     TrackMetadata metadata;
@@ -48,7 +49,7 @@ float sample_to_float(i64 sample, u8 sample_size)
                 sample = 127;
             return sample / 127.0;
         };
-        case 2:
+        case 3:
         {
             constexpr i64 i24_max = (1 << 23) - 1;
             // clamp
@@ -64,6 +65,22 @@ float sample_to_float(i64 sample, u8 sample_size)
             std::exit(0);
         };
     }
+}
+
+Track Track::from_raw_track(const RawTrack& raw_track)
+{
+    Track track;
+    track.metadata = raw_track.metadata;
+
+    for (i64 sample : raw_track.left)
+        track.left.push_back(
+            sample_to_float(sample, track.metadata.bit_depth / 8));
+
+    for (i64 sample : raw_track.right)
+        track.right.push_back(
+            sample_to_float(sample, track.metadata.bit_depth / 8));
+
+    return track;
 }
 
 const char* wav_path = "./wav/brk_upfront amen_1 bar_158 bpm.wav";
@@ -203,4 +220,12 @@ int main()
     RawTrack raw_track = parse_raw_track(bytes, index, metadata);
     std::cout << raw_track.left.size() << " ";
     std::cout << raw_track.right.size() << " ";
+
+    Track track = Track::from_raw_track(raw_track);
+    std::cout << track.left.size() << " ";
+    std::cout << track.right.size() << " ";
+
+    bytes.clear();
+    raw_track.left.clear();
+    raw_track.right.clear();
 }
