@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <iomanip>
 
 i64 read_sample(u8 sample_size,
                 const std::vector<Byte>& bytes,
@@ -15,6 +16,10 @@ i64 read_sample(u8 sample_size,
         case 3:
         {
             Int24 sample = read_i24(bytes, index, policy);
+            std::cout << std::hex << std::setw(3) << +sample.little_endian_bytes[2] << " ";
+            std::cout << std::hex << std::setw(3) << +sample.little_endian_bytes[1] << " ";
+            std::cout << std::hex << std::setw(3) << +sample.little_endian_bytes[0];
+            std::cout << "\t-->\t" << std::dec << sample.to_i64() << '\n';
             return sample.to_i64();
         }
     }
