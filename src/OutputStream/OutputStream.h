@@ -4,7 +4,6 @@
 
 struct OutputStreamConfig
 {
-    static OutputStreamConfig default_config();
     int sample_rate;
     unsigned long buffer_size;
     int n_channels;
@@ -13,7 +12,6 @@ struct OutputStreamConfig
 class OutputStream
 {
    public:
-    OutputStream();
     OutputStream(OutputStreamConfig stream_config);
     ~OutputStream();
     void start();
