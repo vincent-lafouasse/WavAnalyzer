@@ -50,6 +50,24 @@ i64 read_sample(const std::vector<Byte>& bytes, size_t start, u8 sample_size)
     return 0;
 }
 
+RawTrack parse_mono_track(const std::vector<Byte>& bytes,
+                          size_t start,
+                          TrackMetadata metadata)
+{
+    RawTrack track;
+
+    return track;
+}
+
+RawTrack parse_stereo_track(const std::vector<Byte>& bytes,
+                            size_t start,
+                            TrackMetadata metadata)
+{
+    RawTrack track;
+
+    return track;
+}
+
 RawTrack parse_raw_track(const std::vector<Byte>& bytes,
                          size_t start,
                          TrackMetadata metadata)
@@ -58,9 +76,14 @@ RawTrack parse_raw_track(const std::vector<Byte>& bytes,
     const u32 channel_size = metadata.data_size / metadata.n_channels;
     std::cout << "sample size " << sample_size;
     std::cout << "\nchannel size: " << channel_size << '\n';
-    RawTrack track;
 
-    return track;
+    if (metadata.n_channels == 1)
+        return parse_mono_track(bytes, start, metadata);
+    if (metadata.n_channels == 2)
+        return parse_stereo_track(bytes, start, metadata);
+
+    std::cout << "can only parse mono and stereo data for now\n";
+    exit(0);
 }
 
 int main()
