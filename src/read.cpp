@@ -3,20 +3,20 @@
 #include <cstdlib>
 #include <iostream>
 
-i64 read_sample(u8 bit_depth,
+i64 read_sample(u8 sample_size,
                 const std::vector<Byte>& bytes,
                 size_t& index,
                 IndexPolicy policy)
 {
-    switch (bit_depth)
+    switch (sample_size)
     {
-        case 8:
+        case 1:
             return read_u8(bytes, index, policy);
-        case 24:
+        case 3:
             return read_i24(bytes, index, policy).to_i64();
     }
 
-    std::cout << "Unrecognised bit depth: " << bit_depth << std::endl;
+    std::cout << "Unrecognised sample size: " << sample_size << " bytes\n";
     std::exit(0);
 }
 

@@ -25,7 +25,7 @@ Int24 read_i24(const std::vector<Byte>& bytes,
                size_t& index,
                IndexPolicy policy);
 
-i64 read_sample(u8 bit_depth,
+i64 read_sample(u8 sample_size,
                 const std::vector<Byte>& bytes,
                 size_t& index,
                 IndexPolicy policy);

@@ -38,18 +38,6 @@ static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
     index += data_size + (data_size % 2 == 1);
 }
 
-i64 read_sample(const std::vector<Byte>& bytes, size_t start, u8 sample_size)
-{
-    if (sample_size == 1)
-        return bytes[start];
-    if (sample_size == 2)
-    {
-        i16 out = bytes[start] | bytes[start + 1] << 8;
-        return static_cast<i64>(out);
-    }
-    return 0;
-}
-
 RawTrack parse_mono_track(const std::vector<Byte>& bytes,
                           size_t start,
                           TrackMetadata metadata)
