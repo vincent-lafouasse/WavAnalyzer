@@ -20,6 +20,9 @@ target_sources(WavAnalyzer PRIVATE
 	src/Track/types.cpp
 	src/Track/types.h
 
+	src/OutputStream/OutputStream.cpp
+	src/OutputStream/OutputStream.h
+
 	src/test/test.cpp
 	src/test/test.h
 )
