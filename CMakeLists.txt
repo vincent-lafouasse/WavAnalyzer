@@ -28,3 +28,13 @@ target_sources(WavAnalyzer PRIVATE
 )
 set_target_properties(WavAnalyzer PROPERTIES COMPILE_FLAGS "-Wall -Wextra -Wpedantic -g3")
 target_include_directories(WavAnalyzer PUBLIC src)
+
+include(cmake/CPM.cmake)
+
+CPMAddPackage(
+    NAME portaudio
+    GITHUB_REPOSITORY PortAudio/portaudio
+    VERSION 19.7.0
+)
+target_include_directories(WavAnalyzer PUBLIC ${portaudio_SOURCE_DIR}/include)
+target_link_libraries(WavAnalyzer portaudio)
