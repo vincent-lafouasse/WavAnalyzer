@@ -22,6 +22,13 @@ struct TrackMetadata
     u32 data_size;
 };
 
+struct RawTrack
+{
+    RawSignal left;
+    RawSignal right;
+    TrackMetadata metadata;
+};
+
 const char* wav_path = "./wav/brk_upfront amen_1 bar_158 bpm.wav";
 
 static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
@@ -43,17 +50,17 @@ i64 read_sample(const std::vector<Byte>& bytes, size_t start, u8 sample_size)
     return 0;
 }
 
-RawSignal parse_first_channel(const std::vector<Byte>& bytes,
-                              size_t start,
-                              TrackMetadata metadata)
+RawTrack parse_raw_track(const std::vector<Byte>& bytes,
+                         size_t start,
+                         TrackMetadata metadata)
 {
     const u8 sample_size = metadata.bit_depth / 8;
     const u32 channel_size = metadata.data_size / metadata.n_channels;
     std::cout << "sample size " << sample_size;
     std::cout << "\nchannel size: " << channel_size << '\n';
-    RawSignal channel;
+    RawTrack track;
 
-    return channel;
+    return track;
 }
 
 int main()
@@ -113,5 +120,11 @@ int main()
 
     std::cout << metadata.data_size << " bytes of data\n";
 
-    RawSignal raw_channel1 = parse_first_channel(bytes, index, metadata);
+    if (metadata.n_channels > 2)
+    {
+        std::cout << "can only parse mono and stereo data for now\n";
+        exit(0);
+    }
+
+    RawTrack raw_track = parse_raw_track(bytes, index, metadata);
 }
