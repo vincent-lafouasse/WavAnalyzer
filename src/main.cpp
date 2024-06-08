@@ -55,6 +55,7 @@ RawTrack parse_mono_track(const std::vector<Byte>& bytes,
                           TrackMetadata metadata)
 {
     RawTrack track;
+    track.metadata = metadata;
 
     return track;
 }
@@ -64,6 +65,21 @@ RawTrack parse_stereo_track(const std::vector<Byte>& bytes,
                             TrackMetadata metadata)
 {
     RawTrack track;
+    track.metadata = metadata;
+
+    const u8 sample_size = metadata.bit_depth / 8;
+    const u32 n_samples = metadata.data_size / sample_size;
+
+    for (u32 i = 0; i < n_samples; i++)
+    {
+        if (i % 2 == 0)
+        {
+            
+        }
+        else
+        {
+        }
+    }
 
     return track;
 }
