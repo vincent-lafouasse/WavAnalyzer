@@ -83,7 +83,7 @@ Track Track::from_raw_track(const RawTrack& raw_track)
     return track;
 }
 
-const char* wav_path = "./wav/HIHAT11(CLSD).wav";
+const char* wav_path = "./wav/hat_short.wav";
 
 static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
 {
