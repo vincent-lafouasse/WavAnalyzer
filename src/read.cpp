@@ -1,11 +1,23 @@
 #include "read.h"
 
-i32 read_sample(u8 bit_depth,
+#include <cstdlib>
+#include <iostream>
+
+i64 read_sample(u8 bit_depth,
                 const std::vector<Byte>& bytes,
                 size_t& index,
                 IndexPolicy policy)
 {
-    return 0;
+    switch (bit_depth)
+    {
+        case 8:
+            return read_u8(bytes, index, policy);
+        case 24:
+            return read_i24(bytes, index, policy).to_i64();
+    }
+
+    std::cout << "Unrecognised bit depth: " << bit_depth << std::endl;
+    std::exit(0);
 }
 
 u32 read_u32(const std::vector<Byte>& bytes, size_t& index, IndexPolicy policy)
