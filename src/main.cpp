@@ -83,7 +83,7 @@ Track Track::from_raw_track(const RawTrack& raw_track)
     return track;
 }
 
-const char* wav_path = "./wav/brk_upfront amen_1 bar_158 bpm.wav";
+const char* wav_path = "./wav/HIHAT11(CLSD).wav";
 
 static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
 {
@@ -178,9 +178,8 @@ int main()
     assert(fourcc_eq(wave_tag, "WAVE"));
     assert(index == 12);
 
-    skip_chunk(bytes, index);  // junk chunk
-    skip_chunk(bytes, index);  // bext chunk
-    skip_chunk(bytes, index);  // fake chunk
+    while (!fourcc_eq(read_four_cc(bytes, index, IndexPolicy::Peek), "fmt "))
+        skip_chunk(bytes, index);
 
     FourCC fmt_tag = read_four_cc(bytes, index, IndexPolicy::Advance);
     assert(fourcc_eq(fmt_tag, "fmt "));
