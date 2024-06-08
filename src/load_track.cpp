@@ -4,14 +4,25 @@
 #include "FourCC.h"
 #include "read.h"
 
-static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
+static void skip_chunk(const std::vector<Byte>& bytes, size_t& index);
+static TrackMetadata parse_header(const std::vector<Byte>& bytes,
+                                  size_t& index);
+
+Track Track::from_wav(const char* path)
 {
-    index += 4;  // skip tag
-    u32 data_size = read_u32(bytes, index, IndexPolicy::Advance);
-    index += data_size + (data_size % 2 == 1);
+    std::ifstream input(path, std::ios::binary);
+
+    std::vector<Byte> bytes(std::istreambuf_iterator<char>(input), {});
+    size_t index = 0;
+
+    TrackMetadata metadata = parse_header(bytes, index);
+
+    RawTrack raw_track = RawTrack::from_bytes(bytes, index, metadata);
+
+    return Track::from_raw_track(raw_track);
 }
 
-TrackMetadata parse_metadata(const std::vector<Byte>& bytes, size_t& index)
+static TrackMetadata parse_header(const std::vector<Byte>& bytes, size_t& index)
 {
     TrackMetadata metadata;
 
@@ -50,16 +61,9 @@ TrackMetadata parse_metadata(const std::vector<Byte>& bytes, size_t& index)
     return metadata;
 }
 
-Track Track::from_wav(const char* path)
+static void skip_chunk(const std::vector<Byte>& bytes, size_t& index)
 {
-    std::ifstream input(path, std::ios::binary);
-
-    std::vector<Byte> bytes(std::istreambuf_iterator<char>(input), {});
-    size_t index = 0;
-
-    TrackMetadata metadata = parse_metadata(bytes, index);
-
-    RawTrack raw_track = RawTrack::from_bytes(bytes, index, metadata);
-
-    return Track::from_raw_track(raw_track);
+    index += 4;  // skip tag
+    u32 data_size = read_u32(bytes, index, IndexPolicy::Advance);
+    index += data_size + (data_size % 2 == 1);
 }
