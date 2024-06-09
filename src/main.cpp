@@ -1,6 +1,7 @@
 #include "Track/Track.h"
 
 #include <iostream>
+#include <numeric>
 
 const char* wav_path = "./wav/brk_upfront amen_1 bar_158 bpm.wav";
 
@@ -14,6 +15,25 @@ struct SpectrogramParameters
     u32 time_increment;
 };
 
+template <typename T>
+void log(T object, const char* name)
+{
+    std::cout << name << " :\t" << object << '\n';
+    std::cout.flush();
+}
+
+int main()
+{
+    Track track = Track::from_wav(wav_path);
+    std::vector<float> signal = track.left;
+
+    float total_energy = std::inner_product(signal.cbegin(), signal.cend(),
+                                            signal.cbegin(), 0.0);
+    log(total_energy, "total energy");
+
+    return EXIT_SUCCESS;
+}
+
 u32 SpectrogramParameters::frequency_resolution() const
 {
     return sample_rate / window_size;
@@ -22,28 +42,4 @@ u32 SpectrogramParameters::frequency_resolution() const
 u32 SpectrogramParameters::window_duration_ms() const
 {
     return 1000 * window_size / static_cast<float>(sample_rate);
-}
-
-int main()
-{
-    Track track = Track::from_wav(wav_path);
-    std::vector<float> signal = track.left;
-
-    SpectrogramParameters spectrogram_parameters;
-    spectrogram_parameters.sample_rate = track.metadata.sample_rate;
-    spectrogram_parameters.window_size = 256;
-    spectrogram_parameters.time_increment =
-        spectrogram_parameters.window_size / 2;
-
-    std::cout << "length of track "
-              << 1000 * signal.size() /
-                     static_cast<float>(track.metadata.sample_rate)
-              << " ms\n";
-    std::cout << "frequency resolution "
-              << spectrogram_parameters.frequency_resolution() << '\n';
-    std::cout << "window duration "
-              << spectrogram_parameters.window_duration_ms() << " ms\n";
-    std::cout << "number of points "
-              << signal.size() / spectrogram_parameters.time_increment << "\n";
-    return EXIT_SUCCESS;
 }
