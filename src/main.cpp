@@ -33,6 +33,7 @@ int main()
     const Complex imaginary_unit(0.0, 1.0);
     const size_t N = signal.size();
 
+    /*
     std::vector<Complex> dft;
     for (size_t k = 0; k < N; k++)  // a naive n^2 DFT
     {
@@ -49,9 +50,10 @@ int main()
         float completion = 100.0 * k / static_cast<float>(N);
         std::cout << completion << '\n';
     }
+    */
 
     log(signal.size(), "input size");
-    log(dft.size(), "dft size");
+    //log(dft.size(), "dft size");
 
     return EXIT_SUCCESS;
 }
