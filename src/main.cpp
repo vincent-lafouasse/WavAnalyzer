@@ -1,7 +1,7 @@
 #include "Track/Track.h"
 
 #include <complex>
-#include <iomanip>
+#include <fstream>
 #include <iostream>
 
 typedef std::complex<float> Complex;
@@ -21,6 +21,9 @@ struct SpectrogramParameters
     u32 window_size;
     u32 time_increment;
 };
+
+template<typename T>
+void write_to_csv(const std::vector<T>& data);
 
 template <typename T>
 void log(T object, const char* name)
@@ -83,10 +86,7 @@ int main()
     for (const Complex& coefficient : dft)
         dft_amplitudes.push_back(std::norm(coefficient));
 
-    float fft_energy = 0;
-    for (Complex coefficient: dft_amplitudes)
-        fft_energy += std::norm(coefficient);
-    log(fft_energy, "fft energy");
+    write_to_csv(dft_amplitudes);
 
     return EXIT_SUCCESS;
 }
@@ -99,4 +99,18 @@ u32 SpectrogramParameters::frequency_resolution() const
 u32 SpectrogramParameters::window_duration_ms() const
 {
     return 1000 * window_size / static_cast<float>(sample_rate);
+}
+
+
+template<typename T>
+void write_to_csv(const std::vector<T>& data)
+{
+    std::ofstream csv;
+    csv.open("signal.csv");
+    for (const T& cell: data)
+    {
+        csv << cell << ",";
+    }
+    csv << std::endl;
+    csv.close();
 }
