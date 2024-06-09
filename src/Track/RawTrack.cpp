@@ -4,13 +4,13 @@
 
 #include <iostream>
 
-float sample_to_float(i64 sample, u8 sample_size);
-RawTrack parse_mono_track(const std::vector<Byte>& bytes,
-                          size_t start,
-                          TrackMetadata metadata);
-RawTrack parse_stereo_track(const std::vector<Byte>& bytes,
-                            size_t start,
-                            TrackMetadata metadata);
+static float sample_to_float(i64 sample, u8 sample_size);
+static RawTrack parse_mono_track(const std::vector<Byte>& bytes,
+                                 size_t start,
+                                 TrackMetadata metadata);
+static RawTrack parse_stereo_track(const std::vector<Byte>& bytes,
+                                   size_t start,
+                                   TrackMetadata metadata);
 
 Track RawTrack::to_track()
 {
@@ -41,7 +41,7 @@ RawTrack RawTrack::from_bytes(const std::vector<Byte>& bytes,
     exit(0);
 }
 
-float sample_to_float(i64 sample, u8 sample_size)
+static float sample_to_float(i64 sample, u8 sample_size)
 {
     switch (sample_size)
     {
@@ -74,9 +74,9 @@ float sample_to_float(i64 sample, u8 sample_size)
     }
 }
 
-RawTrack parse_mono_track(const std::vector<Byte>& bytes,
-                          size_t start,
-                          TrackMetadata metadata)
+static RawTrack parse_mono_track(const std::vector<Byte>& bytes,
+                                 size_t start,
+                                 TrackMetadata metadata)
 {
     RawTrack track;
     track.metadata = metadata;
@@ -91,9 +91,9 @@ RawTrack parse_mono_track(const std::vector<Byte>& bytes,
     return track;
 }
 
-RawTrack parse_stereo_track(const std::vector<Byte>& bytes,
-                            size_t start,
-                            TrackMetadata metadata)
+static RawTrack parse_stereo_track(const std::vector<Byte>& bytes,
+                                   size_t start,
+                                   TrackMetadata metadata)
 {
     RawTrack track;
     track.metadata = metadata;

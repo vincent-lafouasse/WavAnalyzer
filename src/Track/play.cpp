@@ -15,12 +15,12 @@ struct PlaybackData
 };
 
 // audio callback
-int playback(const void* input_buffer,
-             void* output_buffer,
-             unsigned long buffer_size,
-             const PaStreamCallbackTimeInfo* time_info,
-             PaStreamCallbackFlags status_flags,
-             void* user_data);
+static int playback(const void* input_buffer,
+                    void* output_buffer,
+                    unsigned long buffer_size,
+                    const PaStreamCallbackTimeInfo* time_info,
+                    PaStreamCallbackFlags status_flags,
+                    void* user_data);
 
 void Track::play_mono_blocking() const
 {
@@ -40,12 +40,12 @@ void Track::play_mono_blocking() const
     stream.stop();
 }
 
-int playback(const void* input_buffer,
-             void* output_buffer,
-             unsigned long buffer_size,
-             const PaStreamCallbackTimeInfo* time_info,
-             PaStreamCallbackFlags status_flags,
-             void* user_data)
+static int playback(const void* input_buffer,
+                    void* output_buffer,
+                    unsigned long buffer_size,
+                    const PaStreamCallbackTimeInfo* time_info,
+                    PaStreamCallbackFlags status_flags,
+                    void* user_data)
 {
     (void)input_buffer;
     (void)time_info;
