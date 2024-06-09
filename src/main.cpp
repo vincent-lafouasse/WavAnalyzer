@@ -71,13 +71,10 @@ int main()
     for (float sample : track.left)
         signal.push_back(sample);
 
-    [[maybe_unused]] const size_t input_size = signal.size();
-    [[maybe_unused]] const size_t N = (1 << 17);
-    [[maybe_unused]] const float coverage =
-        1.0 - (input_size - N) / static_cast<float>(N);
-    log(N, "N");
-    log(input_size - N, "ignored samples");
-    log(100.0 * coverage, "coverage");
+    float total_energy = 0;
+    for (Complex sample: signal)
+        total_energy += std::norm(sample);
+    log(total_energy, "total energy");
 
     std::vector<Complex> dft = FFT_out_of_place(signal);
     std::cout << "FFT Done\n";
@@ -85,8 +82,11 @@ int main()
     std::vector<float> dft_amplitudes;
     for (const Complex& coefficient : dft)
         dft_amplitudes.push_back(std::norm(coefficient));
-    for (size_t i = 0; i < 50; i++)
-        std::cout << dft_amplitudes[i] << '\n';
+
+    float fft_energy = 0;
+    for (Complex coefficient: dft_amplitudes)
+        fft_energy += std::norm(coefficient);
+    log(fft_energy, "fft energy");
 
     return EXIT_SUCCESS;
 }
