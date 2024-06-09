@@ -1,15 +1,8 @@
 #include "Track/Track.h"
-#include "portaudio.h"
 
 #include <iostream>
 
 const char* wav_path = "./wav/brk_upfront amen_1 bar_158 bpm.wav";
-
-int track_duration_ms(const Track& track)
-{
-    return 250 + 1000 * static_cast<float>(track.left.size()) /
-                     static_cast<float>(track.metadata.sample_rate);
-}
 
 struct SpectrogramParameters
 {
@@ -34,24 +27,23 @@ u32 SpectrogramParameters::window_duration_ms() const
 int main()
 {
     Track track = Track::from_wav(wav_path);
-    track.play_mono_blocking();
-    /*
     std::vector<float> signal = track.left;
 
     SpectrogramParameters spectrogram_parameters;
     spectrogram_parameters.sample_rate = track.metadata.sample_rate;
     spectrogram_parameters.window_size = 256;
-    spectrogram_parameters.time_increment = spectrogram_parameters.window_size /
-    2;
+    spectrogram_parameters.time_increment =
+        spectrogram_parameters.window_size / 2;
 
-    std::cout << "length of track " << 1000 * signal.size() /
-    static_cast<float>(track.metadata.sample_rate) << " ms\n"; std::cout <<
-    "frequency resolution "
+    std::cout << "length of track "
+              << 1000 * signal.size() /
+                     static_cast<float>(track.metadata.sample_rate)
+              << " ms\n";
+    std::cout << "frequency resolution "
               << spectrogram_parameters.frequency_resolution() << '\n';
     std::cout << "window duration "
               << spectrogram_parameters.window_duration_ms() << " ms\n";
     std::cout << "number of points "
               << signal.size() / spectrogram_parameters.time_increment << "\n";
-*/
     return EXIT_SUCCESS;
 }
