@@ -32,11 +32,6 @@ RawTrack RawTrack::from_bytes(const std::vector<Byte>& bytes,
                               size_t start,
                               TrackMetadata metadata)
 {
-    const u8 sample_size = metadata.bit_depth / 8;
-    const u32 channel_size = metadata.data_size / metadata.n_channels;
-    std::cout << "sample size " << sample_size;
-    std::cout << "\nchannel size: " << channel_size << '\n';
-
     if (metadata.n_channels == 1)
         return parse_mono_track(bytes, start, metadata);
     if (metadata.n_channels == 2)
