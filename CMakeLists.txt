@@ -11,6 +11,8 @@ target_sources(WavAnalyzer PRIVATE
 
 	src/Track/Track.cpp
 	src/Track/Track.h
+	src/Track/play.cpp
+	src/Track/track_duration.cpp
 	src/Track/RawTrack.cpp
 	src/Track/RawTrack.h
 	src/Track/read.cpp

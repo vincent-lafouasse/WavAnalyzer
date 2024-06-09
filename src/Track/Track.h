@@ -14,6 +14,8 @@ struct TrackMetadata
 struct Track
 {
     static Track from_wav(const char* path);
+    void play_mono_blocking() const;
+    u32 duration_ms() const;
     std::vector<float> left;
     std::vector<float> right;
     TrackMetadata metadata;
