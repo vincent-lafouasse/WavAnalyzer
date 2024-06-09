@@ -31,8 +31,9 @@ int main()
     std::vector<float> signal = track.left;
     [[maybe_unused]] const size_t input_size = signal.size();
 
-    [[maybe_unused]] const float two_pi = 2 * std::acos(-1);
+    [[maybe_unused]] const float pi = std::acos(-1);
     [[maybe_unused]] const Complex imaginary_unit(0.0, 1.0);
+    [[maybe_unused]] const Complex two_i_pi(0.0, 2 * pi);
     [[maybe_unused]] const size_t N = (1 << 17);
     [[maybe_unused]] const float coverage =
         1.0 - (input_size - N) / static_cast<float>(N);
