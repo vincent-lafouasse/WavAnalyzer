@@ -8,6 +8,10 @@ typedef std::complex<float> Complex;
 
 const char* wav_path = "./wav/nice_chord.wav";
 
+[[maybe_unused]] const float pi = std::acos(-1);
+[[maybe_unused]] const Complex imaginary_unit(0.0, 1.0);
+[[maybe_unused]] const Complex two_i_pi(0.0, 2 * pi);
+
 struct SpectrogramParameters
 {
     u32 frequency_resolution() const;
@@ -25,12 +29,37 @@ void log(T object, const char* name)
     std::cout.flush();
 }
 
+// a nasty FFT with a bunch of allocation in recursion
 std::vector<Complex> FFT_out_of_place(std::vector<Complex> input)
 {
-    if (input.size() <= 1)
+    const size_t N = input.size();
+    if (N <= 1)
         return input;
 
-    std::vector<Complex> output;
+    std::vector<Complex> evens;
+    std::vector<Complex> odds;
+    for (size_t i = 0; i < N; i++)
+    {
+        if (i % 2 == 0)
+            evens.push_back(input[i]);
+        else
+            odds.push_back(input[i]);
+    }
+
+    evens = FFT_out_of_place(evens);
+    odds = FFT_out_of_place(odds);
+
+    std::vector<Complex> output(N);
+
+    Complex factor;
+    for (size_t k = 0; k < N / 2; k++)
+    {
+        factor =
+            std::exp(-two_i_pi * static_cast<float>(k) / static_cast<float>(N));
+
+        output[k] = evens[k] + factor * odds[k];
+        output[k + N / 2] = evens[k] + factor * odds[k];
+    }
 
     return output;
 }
@@ -39,14 +68,10 @@ int main()
 {
     Track track = Track::from_wav(wav_path);
     std::vector<Complex> signal;
-    for (float sample: track.left)
+    for (float sample : track.left)
         signal.push_back(sample);
 
     [[maybe_unused]] const size_t input_size = signal.size();
-
-    [[maybe_unused]] const float pi = std::acos(-1);
-    [[maybe_unused]] const Complex imaginary_unit(0.0, 1.0);
-    [[maybe_unused]] const Complex two_i_pi(0.0, 2 * pi);
     [[maybe_unused]] const size_t N = (1 << 17);
     [[maybe_unused]] const float coverage =
         1.0 - (input_size - N) / static_cast<float>(N);
@@ -54,24 +79,10 @@ int main()
     log(input_size - N, "ignored samples");
     log(100.0 * coverage, "coverage");
 
-    /*
-    std::vector<Complex> dft;
-    for (size_t k = 0; k < N; k++)  // a naive n^2 DFT
-    {
-        Complex X_k = 0;
-
-        for (size_t n = 0; n < N; n++)
-        {
-            X_k += signal[n] *
-                   std::exp(-imaginary_unit * two_pi *
-                            static_cast<float>(k * n) / static_cast<float>(N));
-        }
-
-        dft.push_back(X_k);
-        float completion = 100.0 * k / static_cast<float>(N);
-        std::cout << completion << '\n';
-    }
-    */
+    std::vector<Complex> dft = FFT_out_of_place(signal);
+    std::cout << "FFT Done\n";
+    for (size_t i = 0; i < 50; i++)
+        std::cout << dft[i] << " ";
 
     return EXIT_SUCCESS;
 }
