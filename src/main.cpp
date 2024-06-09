@@ -1,6 +1,7 @@
 #include "Track/Track.h"
 
 #include <complex>
+#include <iomanip>
 #include <iostream>
 
 typedef std::complex<float> Complex;
@@ -20,7 +21,7 @@ struct SpectrogramParameters
 template <typename T>
 void log(T object, const char* name)
 {
-    std::cout << name << " :\t" << object << '\n';
+    std::cout << name << " : " << object << '\n';
     std::cout.flush();
 }
 
@@ -28,10 +29,16 @@ int main()
 {
     Track track = Track::from_wav(wav_path);
     std::vector<float> signal = track.left;
+    [[maybe_unused]] const size_t input_size = signal.size();
 
-    const float two_pi = 2 * std::acos(-1);
-    const Complex imaginary_unit(0.0, 1.0);
-    const size_t N = signal.size();
+    [[maybe_unused]] const float two_pi = 2 * std::acos(-1);
+    [[maybe_unused]] const Complex imaginary_unit(0.0, 1.0);
+    [[maybe_unused]] const size_t N = (1 << 17);
+    [[maybe_unused]] const float coverage =
+        1.0 - (input_size - N) / static_cast<float>(N);
+    log(N, "N");
+    log(input_size - N, "ignored samples");
+    log(100.0 * coverage, "coverage");
 
     /*
     std::vector<Complex> dft;
@@ -51,9 +58,6 @@ int main()
         std::cout << completion << '\n';
     }
     */
-
-    log(signal.size(), "input size");
-    //log(dft.size(), "dft size");
 
     return EXIT_SUCCESS;
 }
