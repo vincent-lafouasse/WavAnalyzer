@@ -3,7 +3,7 @@
 #include <iostream>
 #include <numeric>
 
-const char* wav_path = "./wav/brk_upfront amen_1 bar_158 bpm.wav";
+const char* wav_path = "./wav/nice_chord.wav";
 
 struct SpectrogramParameters
 {
@@ -25,6 +25,7 @@ void log(T object, const char* name)
 int main()
 {
     Track track = Track::from_wav(wav_path);
+    track.play_mono_blocking();
     std::vector<float> signal = track.left;
 
     float total_energy = std::inner_product(signal.cbegin(), signal.cend(),
