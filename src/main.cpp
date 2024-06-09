@@ -81,8 +81,12 @@ int main()
 
     std::vector<Complex> dft = FFT_out_of_place(signal);
     std::cout << "FFT Done\n";
+
+    std::vector<float> dft_amplitudes;
+    for (const Complex& coefficient : dft)
+        dft_amplitudes.push_back(std::norm(coefficient));
     for (size_t i = 0; i < 50; i++)
-        std::cout << dft[i] << " ";
+        std::cout << dft_amplitudes[i] << '\n';
 
     return EXIT_SUCCESS;
 }
