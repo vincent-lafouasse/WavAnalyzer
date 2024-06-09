@@ -22,7 +22,7 @@ struct SpectrogramParameters
     u32 time_increment;
 };
 
-template<typename T>
+template <typename T>
 void write_to_csv(const std::vector<T>& data);
 
 template <typename T>
@@ -75,7 +75,7 @@ int main()
         signal.push_back(sample);
 
     float total_energy = 0;
-    for (Complex sample: signal)
+    for (Complex sample : signal)
         total_energy += std::norm(sample);
     log(total_energy, "total energy");
 
@@ -101,13 +101,12 @@ u32 SpectrogramParameters::window_duration_ms() const
     return 1000 * window_size / static_cast<float>(sample_rate);
 }
 
-
-template<typename T>
+template <typename T>
 void write_to_csv(const std::vector<T>& data)
 {
     std::ofstream csv;
     csv.open("signal.csv");
-    for (const T& cell: data)
+    for (const T& cell : data)
     {
         csv << cell << ",";
     }
