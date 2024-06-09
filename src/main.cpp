@@ -25,10 +25,23 @@ void log(T object, const char* name)
     std::cout.flush();
 }
 
+std::vector<Complex> FFT_out_of_place(std::vector<Complex> input)
+{
+    if (input.size() <= 1)
+        return input;
+
+    std::vector<Complex> output;
+
+    return output;
+}
+
 int main()
 {
     Track track = Track::from_wav(wav_path);
-    std::vector<float> signal = track.left;
+    std::vector<Complex> signal;
+    for (float sample: track.left)
+        signal.push_back(sample);
+
     [[maybe_unused]] const size_t input_size = signal.size();
 
     [[maybe_unused]] const float pi = std::acos(-1);
