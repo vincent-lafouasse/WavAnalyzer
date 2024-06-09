@@ -12,7 +12,6 @@ const char* wav_path = "./wav/nice_chord.wav";
 [[maybe_unused]] const Complex imaginary_unit(0.0, 1.0);
 [[maybe_unused]] const Complex two_i_pi(0.0, 2 * pi);
 
-
 static float frequency_12tet(u32 note)
 {
     const i32 offset_from_a4 = note - 69;
