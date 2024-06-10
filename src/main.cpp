@@ -21,7 +21,7 @@ struct Note
         return 440.0 * std::exp2(offset_from_a4 / 12.0);
     }
     size_t corresponding_frequency_bucket(u32 dft_size, u32 sample_rate);
-    u32 midi_note;
+    size_t midi_note;
 };
 
 struct SpectrogramParameters
@@ -95,7 +95,14 @@ int main()
     for (const Complex& coefficient : dft)
         dft_amplitudes.push_back(std::norm(coefficient));
 
-    write_to_csv(dft_amplitudes);
+    std::vector<size_t> dft_bucket_from_note{};
+    Note note(0);
+    while (note.frequency() < 20000.0f)
+    {
+        float frequency = note.frequency();
+        std::cout << note.midi_note << '\t' << frequency << '\n';
+        note.midi_note++;
+    }
 
     return EXIT_SUCCESS;
 }
