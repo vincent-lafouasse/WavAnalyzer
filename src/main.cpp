@@ -60,6 +60,32 @@ std::vector<Complex> FFT_out_of_place(const std::vector<Complex>& input)
     return output;
 }
 
+float window_function(size_t index, size_t window_size)
+{
+    (void)index;
+    (void)window_size;
+    return 1.0;
+}
+
+std::vector<float> FFT_slice(const std::vector<float>& input,
+                             size_t offset,
+                             size_t window_size)
+{
+    assert(offset + window_size < input.size());
+    std::vector<float> windowed_input{};
+    for (size_t i = 0; i < window_size; i++)
+        windowed_input.push_back(window_function(i, window_size) *
+                                 input[offset + i]);
+
+    std::vector<Complex> dft = FFT(windowed_input);
+
+    std::vector<float> real_dft{};
+    for (Complex coeff : dft)
+        real_dft.push_back(coeff.real());
+
+    return real_dft;
+}
+
 int main()
 {
     Track track = Track::from_wav(wav_path);
