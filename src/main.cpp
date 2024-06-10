@@ -14,8 +14,19 @@ const char* wav_path = "./wav/simple_chord.wav";
 [[maybe_unused]] const Complex imaginary_unit(0.0, 1.0);
 [[maybe_unused]] const Complex two_i_pi(0.0, 2 * pi);
 
+std::vector<Complex> FFT_out_of_place(const std::vector<Complex>& input);
+
+std::vector<Complex> FFT(const std::vector<float>& input)
+{
+    std::vector<Complex> complex_input{};
+    for (float sample : input)
+        complex_input.push_back(sample);
+
+    return FFT_out_of_place(complex_input);
+}
+
 // a nasty FFT with a bunch of allocation in recursion
-std::vector<Complex> FFT_out_of_place(std::vector<Complex> input)
+std::vector<Complex> FFT_out_of_place(const std::vector<Complex>& input)
 {
     const size_t N = input.size();
     if (N <= 1)
@@ -52,16 +63,9 @@ std::vector<Complex> FFT_out_of_place(std::vector<Complex> input)
 int main()
 {
     Track track = Track::from_wav(wav_path);
-    std::vector<Complex> signal;
-    for (float sample : track.left)
-        signal.push_back(sample);
+    std::vector<float> signal = track.left;
 
-    float total_energy = 0;
-    for (Complex sample : signal)
-        total_energy += std::norm(sample);
-    log(total_energy, "total energy");
-
-    std::vector<Complex> dft = FFT_out_of_place(signal);
+    std::vector<Complex> dft = FFT(signal);
     std::cout << "FFT Done\n";
 
     std::vector<float> dft_amplitudes;
