@@ -7,7 +7,7 @@
 
 typedef std::complex<float> Complex;
 
-const char* wav_path = "./wav/nice_chord.wav";
+const char* wav_path = "./wav/simple_chord.wav";
 
 [[maybe_unused]] const float pi = std::acos(-1);
 [[maybe_unused]] const Complex imaginary_unit(0.0, 1.0);
