@@ -25,6 +25,8 @@ target_sources(WavAnalyzer PRIVATE
 	src/OutputStream/OutputStream.cpp
 	src/OutputStream/OutputStream.h
 
+	src/log.hpp
+
 	src/test/test.cpp
 	src/test/test.h
 )

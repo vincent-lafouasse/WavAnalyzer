@@ -1,7 +1,7 @@
 #include "Track/Track.h"
+#include "log.hpp"
 
 #include <complex>
-#include <fstream>
 #include <iostream>
 #include <numeric>
 
@@ -67,13 +67,6 @@ struct Note
 
 template <typename T>
 void write_to_csv(const std::vector<T>& data);
-
-template <typename T>
-void log(T object, const char* name)
-{
-    std::cout << name << " : " << object << '\n';
-    std::cout.flush();
-}
 
 // a nasty FFT with a bunch of allocation in recursion
 std::vector<Complex> FFT_out_of_place(std::vector<Complex> input)
@@ -146,8 +139,8 @@ int main()
     for (size_t note = dft_bucket_from_note.size(); note > 0; note--)
     {
         size_t bucket = dft_bucket_from_note.at(note - 1);
-        size_t gain_from_mean =
-            std::round(20.0 * std::log10(dft_amplitudes.at(bucket) / mean_amplitude));
+        size_t gain_from_mean = std::round(
+            20.0 * std::log10(dft_amplitudes.at(bucket) / mean_amplitude));
 
         if (gain_from_mean > 0)
         {
@@ -159,17 +152,4 @@ int main()
     }
 
     return EXIT_SUCCESS;
-}
-
-template <typename T>
-void write_to_csv(const std::vector<T>& data)
-{
-    std::ofstream csv;
-    csv.open("signal.csv");
-    for (const T& cell : data)
-    {
-        csv << cell << ",";
-    }
-    csv << std::endl;
-    csv.close();
 }
