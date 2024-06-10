@@ -143,17 +143,17 @@ int main()
         note++;
     }
 
-    for (size_t note = 0; note < dft_bucket_from_note.size(); note++)
+    for (size_t note = dft_bucket_from_note.size(); note > 0; note--)
     {
-        size_t bucket = dft_bucket_from_note.at(note);
+        size_t bucket = dft_bucket_from_note.at(note - 1);
         size_t gain_from_mean =
-            20 *
-            std::round(std::log10(dft_amplitudes.at(bucket) / mean_amplitude));
+            std::round(20.0 * std::log10(dft_amplitudes.at(bucket) / mean_amplitude));
 
         if (gain_from_mean > 0)
         {
             std::cout << Note(note).name() << "\t";
-            std::cout << gain_from_mean << " dB" << "\t";
+            for (size_t i = 0; i < gain_from_mean; i++)
+                std::cout << "█";
             std::cout << '\n';
         }
     }
