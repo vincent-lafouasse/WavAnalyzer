@@ -8,7 +8,7 @@
 
 typedef std::complex<float> Complex;
 
-const char* wav_path = "./wav/simple_chord.wav";
+const char* wav_path = "./wav/a440_sine.wav";
 
 [[maybe_unused]] const float pi = std::acos(-1);
 [[maybe_unused]] const Complex imaginary_unit(0.0, 1.0);
@@ -91,16 +91,12 @@ int main()
     Track track = Track::from_wav(wav_path);
     std::vector<float> signal = track.left;
 
-    std::vector<Complex> dft = FFT(signal);
+    std::vector<float> dft_real = FFT_slice(signal, 0, signal.size());
     std::cout << "FFT Done\n";
 
-    std::vector<float> dft_amplitudes;
-    for (const Complex& coefficient : dft)
-        dft_amplitudes.push_back(std::norm(coefficient));
-
     float mean_amplitude =
-        std::accumulate(dft_amplitudes.cbegin(), dft_amplitudes.cend(), 0.0);
-    mean_amplitude /= dft_amplitudes.size();
+        std::accumulate(dft_real.cbegin(), dft_real.cend(), 0.0);
+    mean_amplitude /= dft_real.size();
 
     std::vector<size_t> dft_bucket_from_note{};
     size_t note = 0;
@@ -108,15 +104,15 @@ int main()
     {
         dft_bucket_from_note.push_back(
             Note(note).corresponding_frequency_bucket(
-                dft.size(), track.metadata.sample_rate));
+                dft_real.size(), track.metadata.sample_rate));
         note++;
     }
 
     for (size_t note = dft_bucket_from_note.size(); note > 0; note--)
     {
         size_t bucket = dft_bucket_from_note.at(note - 1);
-        size_t gain_from_mean = std::round(
-            20.0 * std::log10(dft_amplitudes.at(bucket) / mean_amplitude));
+        size_t gain_from_mean =
+            std::round(20.0 * std::log10(dft_real.at(bucket) / mean_amplitude));
 
         if (gain_from_mean > 0)
         {
