@@ -20,7 +20,12 @@ struct Note
         const i32 offset_from_a4 = midi_note - 69;
         return 440.0 * std::exp2(offset_from_a4 / 12.0);
     }
-    size_t corresponding_frequency_bucket(u32 dft_size, u32 sample_rate);
+    size_t corresponding_frequency_bucket(u32 dft_size, u32 sample_rate)
+    {
+        const float frequency_unit =
+            static_cast<float>(sample_rate) / static_cast<float>(dft_size);
+        return std::round(this->frequency() / frequency_unit);
+    }
     size_t midi_note;
 };
 
@@ -96,12 +101,24 @@ int main()
         dft_amplitudes.push_back(std::norm(coefficient));
 
     std::vector<size_t> dft_bucket_from_note{};
-    Note note(0);
-    while (note.frequency() < 20000.0f)
+    size_t note = 0;
+    while (Note(note).frequency() < 20000.0f)
     {
-        float frequency = note.frequency();
-        std::cout << note.midi_note << '\t' << frequency << '\n';
-        note.midi_note++;
+        dft_bucket_from_note.push_back(
+            Note(note).corresponding_frequency_bucket(
+                dft.size(), track.metadata.sample_rate));
+        note++;
+    }
+
+    for (size_t note = 0; note < dft_bucket_from_note.size(); note++)
+    {
+        size_t bucket = dft_bucket_from_note.at(note);
+        std::cout << note << "\t";
+        std::cout << bucket << "\t";
+        std::cout << Note(note).frequency() << "\t";
+        std::cout << track.metadata.sample_rate * bucket /
+                         static_cast<float>(dft.size());
+        std::cout << '\n';
     }
 
     return EXIT_SUCCESS;
