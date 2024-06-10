@@ -3,7 +3,6 @@
 #include <complex>
 #include <fstream>
 #include <iostream>
-#include <memory>
 
 typedef std::complex<float> Complex;
 
@@ -63,13 +62,6 @@ struct Note
         }
     }
     size_t midi_note;
-};
-
-struct SpectrogramParameters
-{
-    u32 sample_rate;
-    u32 window_size;
-    u32 time_increment;
 };
 
 template <typename T>
