@@ -71,7 +71,7 @@ std::vector<float> FFT_slice(const std::vector<float>& input,
                              size_t offset,
                              size_t window_size)
 {
-    assert(offset + window_size < input.size());
+    assert(offset + window_size <= input.size());
     std::vector<float> windowed_input{};
     for (size_t i = 0; i < window_size; i++)
         windowed_input.push_back(window_function(i, window_size) *
