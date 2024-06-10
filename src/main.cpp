@@ -129,7 +129,8 @@ int main()
     for (const Complex& coefficient : dft)
         dft_amplitudes.push_back(std::norm(coefficient));
 
-    float mean_amplitude = std::accumulate(dft_amplitudes.cbegin(), dft_amplitudes.cend(), 0.0);
+    float mean_amplitude =
+        std::accumulate(dft_amplitudes.cbegin(), dft_amplitudes.cend(), 0.0);
     mean_amplitude /= dft_amplitudes.size();
 
     std::vector<size_t> dft_bucket_from_note{};
@@ -145,13 +146,15 @@ int main()
     for (size_t note = 0; note < dft_bucket_from_note.size(); note++)
     {
         size_t bucket = dft_bucket_from_note.at(note);
-        size_t gain_from_mean = 20 * std::round(std::log10(dft_amplitudes.at(bucket) / mean_amplitude));
+        size_t gain_from_mean =
+            20 *
+            std::round(std::log10(dft_amplitudes.at(bucket) / mean_amplitude));
 
         if (gain_from_mean > 0)
         {
-        std::cout << Note(note).name() << "\t";
-        std::cout <<  gain_from_mean << " dB" << "\t";
-        std::cout << '\n';
+            std::cout << Note(note).name() << "\t";
+            std::cout << gain_from_mean << " dB" << "\t";
+            std::cout << '\n';
         }
     }
 
