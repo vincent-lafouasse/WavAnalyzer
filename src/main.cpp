@@ -12,18 +12,20 @@ const char* wav_path = "./wav/nice_chord.wav";
 [[maybe_unused]] const Complex imaginary_unit(0.0, 1.0);
 [[maybe_unused]] const Complex two_i_pi(0.0, 2 * pi);
 
-static float frequency_12tet(u32 note)
+struct Note
 {
-    const i32 offset_from_a4 = note - 69;
-
-    return 440.0 * std::exp2(offset_from_a4 / 12.0);
-}
+    Note(u32 midi_note) : midi_note(midi_note) {}
+    float frequency()
+    {
+        const i32 offset_from_a4 = midi_note - 69;
+        return 440.0 * std::exp2(offset_from_a4 / 12.0);
+    }
+    size_t corresponding_frequency_bucket(u32 dft_size, u32 sample_rate);
+    u32 midi_note;
+};
 
 struct SpectrogramParameters
 {
-    u32 frequency_resolution() const;
-    u32 window_duration_ms() const;
-
     u32 sample_rate;
     u32 window_size;
     u32 time_increment;
@@ -96,16 +98,6 @@ int main()
     write_to_csv(dft_amplitudes);
 
     return EXIT_SUCCESS;
-}
-
-u32 SpectrogramParameters::frequency_resolution() const
-{
-    return sample_rate / window_size;
-}
-
-u32 SpectrogramParameters::window_duration_ms() const
-{
-    return 1000 * window_size / static_cast<float>(sample_rate);
 }
 
 template <typename T>
