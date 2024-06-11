@@ -5,7 +5,8 @@ import argparse
 
 
 def main():
-    args = fetch_args()
+    parser = build_parser()
+    args = parser.parse_args()
     indices, values = fetch_data(args.csv_path)
     print(args)
 
@@ -13,7 +14,7 @@ def main():
     plot_data(indices, values, args)
 
 
-def fetch_args():
+def build_parser():
     parser = argparse.ArgumentParser(description="plot csv to monitor your data")
     parser.add_argument(
         "csv_path",
@@ -32,7 +33,7 @@ def fetch_args():
         "--logy", help="set y scale to logarithmic", action="store_true"
     )
 
-    return parser.parse_args()
+    return parser
 
 
 def fetch_data(csv_path):
