@@ -31,6 +31,10 @@ void SpectrumAnalyzer::execute_fft()
     std::vector<Complex> dft_input(input.cbegin(), input.cbegin() + input_size);
 
     std::vector<Complex> dft = PossDSP::ugly_fft(dft_input);
+
+    output.clear();
+    for (size_t i = 0; i < input_size; i++)
+        output.push_back(std::norm(dft[i]));
 }
 
 void SpectrumAnalyzer::write(const char* name) const
