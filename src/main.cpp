@@ -183,7 +183,8 @@ int main()
     Track track = Track::from_wav(wav_path);
 
     SpectrogramData fft_data(track);
-
+    fft_data.execute_fft();
+    fft_data.write();
 
     /*
     std::vector<float> dft_real = FFT_slice(signal, 0, N);
