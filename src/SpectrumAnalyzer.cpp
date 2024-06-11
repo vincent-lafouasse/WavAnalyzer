@@ -23,7 +23,7 @@ SpectrumAnalyzer::SpectrumAnalyzer(const std::vector<float>& signal,
     n_bins = last_bin - first_bin;
 }
 
-SpectrumAnalyzer::~SpectrumAnalyzer(){};
+SpectrumAnalyzer::~SpectrumAnalyzer() {};
 
 void SpectrumAnalyzer::write(const char* name) const
 {
