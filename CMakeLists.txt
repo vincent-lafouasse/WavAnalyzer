@@ -11,6 +11,7 @@ target_sources(WavAnalyzer PRIVATE
 
 	src/SpectrumAnalyzer.cpp
 	src/SpectrumAnalyzer.h
+	src/fftw3_notmine.cpp
 
 	src/Track/Track.cpp
 	src/Track/Track.h
