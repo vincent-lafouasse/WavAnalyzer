@@ -138,16 +138,16 @@ size_t crop_to_pow2(size_t sz)
     return (1 << power);
 }
 
-struct SpectrogramData
+struct SpectrumAnalyzer
 {
-    SpectrogramData(const Track& track)
+    SpectrumAnalyzer(const std::vector<float>& signal, float sample_rate)
     {
-        input_size = crop_to_pow2(track.left.size());
-        input = std::vector<double>(track.left.cbegin(),
-                                    track.left.cbegin() + input_size);
+        input_size = crop_to_pow2(signal.size());
+        input =
+            std::vector<double>(signal.cbegin(), signal.cbegin() + input_size);
         output = std::vector<double>(input_size);
 
-        input_sample_rate = track.metadata.sample_rate;
+        input_sample_rate = sample_rate;
         const double frequency_unit = input_sample_rate / input_size;
 
         first_bin = std::ceil(20.0 / frequency_unit);
@@ -157,7 +157,7 @@ struct SpectrogramData
         n_bins = last_bin - first_bin;
     }
 
-    ~SpectrogramData() {};
+    ~SpectrumAnalyzer(){};
 
     void execute_fftw3_NOT_MINE()
     {
@@ -200,9 +200,9 @@ int main()
     std::cout << "Loading " << wav_path << "\n";
     Track track = Track::from_wav(wav_path);
 
-    SpectrogramData fft_data(track);
-    fft_data.execute_fftw3_NOT_MINE();
-    fft_data.write();
+    SpectrumAnalyzer spectrum(track.left, track.metadata.sample_rate);
+    spectrum.execute_fftw3_NOT_MINE();
+    spectrum.write();
 
     /*
     std::vector<float> dft_real = FFT_slice(signal, 0, N);
