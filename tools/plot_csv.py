@@ -64,6 +64,7 @@ def plot_data(indices, values, args):
     if args.logy:
         ax.set_yscale("log")
 
+    plt.grid(visible=True, which='both', axis='both')
     ax.plot(indices, values)
     plt.show()
 
