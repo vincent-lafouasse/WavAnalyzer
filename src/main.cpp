@@ -95,7 +95,7 @@ std::vector<float> FFT_slice(const std::vector<float>& input,
 template <typename T>
 inline float mean(const std::vector<T>& v)
 {
-    return std::accumulate(v.cbegin(), v.cend(), 0) /
+    return std::accumulate(v.cbegin(), v.cend(), 0.0) /
            static_cast<float>(v.size());
 }
 
@@ -115,6 +115,13 @@ T percentile(std::vector<T> vec, float percent)
     std::sort(vec.begin(), vec.end());
     size_t index = vec.size() * percent / 100.0;
     return vec.at(index);
+}
+
+template <typename T>
+void print_n(T object, size_t n)
+{
+    for (size_t i = 0; i < n; i++)
+        std::cout << object;
 }
 
 int main()
@@ -147,8 +154,7 @@ int main()
         if (gain_from_mean > 0)
         {
             std::cout << Note(note).name() << "\t";
-            for (size_t i = 0; i < gain_from_mean; i++)
-                std::cout << "█";
+            print_n("█", gain_from_mean);
             std::cout << '\n';
         }
     }
