@@ -19,6 +19,7 @@ namespace Constants
 [[maybe_unused]] const Complex two_i_pi(0.0, 2 * pi);
 }  // namespace Constants
 
+/*
 std::vector<Complex> FFT_out_of_place(const std::vector<Complex>& input);
 
 std::vector<Complex> FFT(const std::vector<float>& input)
@@ -125,6 +126,7 @@ void print_n(T object, size_t n)
     for (size_t i = 0; i < n; i++)
         std::cout << object;
 }
+*/
 
 size_t crop_to_pow2(size_t sz)
 {
@@ -136,6 +138,30 @@ size_t crop_to_pow2(size_t sz)
     power -= 1;
     return (1 << power);
 }
+
+struct SpectrogramData
+{
+    SpectrogramData(const Track& track)
+    {
+        input_size = crop_to_pow2(track.left.size());
+        input = std::vector<double>(track.left.cbegin(),
+                                    track.left.cbegin() + input_size);
+        output = std::vector<double>(input_size);
+
+        const unsigned int plan_flags = FFTW_ESTIMATE;
+        const fftw_r2r_kind kind = FFTW_HC2R;
+        plan = fftw_plan_r2r_1d(input_size, &(input[0]), &(output[0]), kind,
+                                plan_flags);
+    }
+    ~SpectrogramData();
+
+    std::vector<double> input;
+    std::vector<double> output;
+    size_t input_size;
+    fftw_plan plan;
+    int start_index;  // frequency offset, ignore below 20 Hz
+    int n_bins;       // nnumber of frequency bins to fetch
+};
 
 int main()
 {
