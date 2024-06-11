@@ -10,9 +10,12 @@ typedef std::complex<float> Complex;
 
 const char* wav_path = "./wav/a440_sine.wav";
 
+namespace Constants
+{
 [[maybe_unused]] const float pi = std::acos(-1);
 [[maybe_unused]] const Complex imaginary_unit(0.0, 1.0);
 [[maybe_unused]] const Complex two_i_pi(0.0, 2 * pi);
+}  // namespace Constants
 
 std::vector<Complex> FFT_out_of_place(const std::vector<Complex>& input);
 
@@ -50,8 +53,8 @@ std::vector<Complex> FFT_out_of_place(const std::vector<Complex>& input)
     Complex factor;
     for (size_t k = 0; k < N / 2; k++)
     {
-        factor =
-            std::exp(-two_i_pi * static_cast<float>(k) / static_cast<float>(N));
+        factor = std::exp(-Constants::two_i_pi * static_cast<float>(k) /
+                          static_cast<float>(N));
 
         output[k] = evens[k] + factor * odds[k];
         output[k + N / 2] = evens[k] + factor * odds[k];
