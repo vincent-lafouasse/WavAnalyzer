@@ -7,6 +7,7 @@ import argparse
 def main():
     args = fetch_args()
     indices, values = fetch_data(args.csv_path)
+    print(args)
 
     print(f"Plotting {args.csv_path}")
     plot_data(indices, values, args)
@@ -26,6 +27,8 @@ def fetch_args():
     parser.add_argument(
         "--logy", help="set y scale to logarithmic", action="store_true"
     )
+    parser.add_argument("--ymin", help="set minimum y value", action="store")
+    parser.add_argument("--ymax", help="set maximum y value", action="store")
 
     return parser.parse_args()
 
@@ -57,6 +60,17 @@ def fetch_data(csv_path):
 
 def plot_data(indices, values, args):
     fig, ax = plt.subplots()
+
+    if args.ymin is not None and args.ymax is not None:
+        ymin = float(args.ymin)
+        ymax = float(args.ymax)
+        plt.ylim(bottom=ymin, top=ymax)
+    elif args.ymin is not None:
+        ymin = float(args.ymin)
+        plt.ylim(bottom=ymin)
+    elif args.ymax is not None:
+        ymax = float(args.ymax)
+        plt.ylim(top=ymax)
 
     if args.logx:
         ax.set_xscale("log")
