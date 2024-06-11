@@ -8,6 +8,21 @@
 
 static size_t crop_to_pow2(size_t sz);
 
+static float amplitude_at(float frequency,
+                          const std::vector<float>& amplitudes,
+                          float sample_rate)
+{
+    float frequency_unit = sample_rate / amplitudes.size();
+    float index_f = frequency / frequency_unit;
+
+    // lerp
+    float low = amplitudes[std::floor(index_f)];
+    float high = amplitudes[std::ceil(index_f)];
+    float offset = index_f - std::floorf(index_f);
+
+    return low + offset * (high - low);
+}
+
 SpectrumAnalyzer::SpectrumAnalyzer(const std::vector<float>& signal,
                                    float sample_rate)
 {
@@ -25,7 +40,7 @@ SpectrumAnalyzer::SpectrumAnalyzer(const std::vector<float>& signal,
     n_bins = last_bin - first_bin;
 }
 
-SpectrumAnalyzer::~SpectrumAnalyzer() {};
+SpectrumAnalyzer::~SpectrumAnalyzer(){};
 
 void SpectrumAnalyzer::execute_fft()
 {
