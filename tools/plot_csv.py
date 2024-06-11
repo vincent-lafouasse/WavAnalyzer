@@ -1,18 +1,21 @@
 import csv
-import sys
 import numpy as np
 import matplotlib.pyplot as plt
+import argparse
 
 
 def main():
-    if len(sys.argv) != 2:
-        print(f"Usage python3 plot_csv.py foo.csv")
-        exit(1)
+    parser = argparse.ArgumentParser(description="plot csv")
+    parser.add_argument(
+        "csv_path",
+        metavar="csv_path",
+        type=str,
+    )
 
-    csv_path = sys.argv[1]
-    print(f"Plotting {csv_path}")
+    args = parser.parse_args()
+    print(f"Plotting {args.csv_path}")
 
-    with open(csv_path, "r") as file:
+    with open(args.csv_path, "r") as file:
         raw_data = file.read()
 
     lines = raw_data.strip("\n").split("\n")
