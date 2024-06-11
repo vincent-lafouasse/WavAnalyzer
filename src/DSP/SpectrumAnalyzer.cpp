@@ -1,4 +1,5 @@
 #include "SpectrumAnalyzer.h"
+#include "fft.h"
 
 #include <cmath>
 #include <fstream>
@@ -23,7 +24,14 @@ SpectrumAnalyzer::SpectrumAnalyzer(const std::vector<float>& signal,
     n_bins = last_bin - first_bin;
 }
 
-SpectrumAnalyzer::~SpectrumAnalyzer() {};
+SpectrumAnalyzer::~SpectrumAnalyzer(){};
+
+void SpectrumAnalyzer::execute_fft()
+{
+    std::vector<Complex> dft_input(input.cbegin(), input.cbegin() + input_size);
+
+    std::vector<Complex> dft = PossDSP::ugly_fft(dft_input);
+}
 
 void SpectrumAnalyzer::write(const char* name) const
 {

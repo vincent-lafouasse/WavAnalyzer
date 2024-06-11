@@ -7,6 +7,7 @@ struct SpectrumAnalyzer
     SpectrumAnalyzer(const std::vector<float>& signal, float sample_rate);
     ~SpectrumAnalyzer();
 
+    void execute_fft();
     void execute_fftw3_NOT_MINE();
     void write(const char*) const;
 
