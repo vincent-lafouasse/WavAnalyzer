@@ -2,6 +2,9 @@
 
 #include <cmath>
 
+namespace PossDSP
+{
+
 namespace constants
 {
 constexpr Complex J = {0, 1};
@@ -40,3 +43,4 @@ std::vector<Complex> ugly_fft(const std::vector<Complex>& input)
 
     return out;
 }
+}  // namespace PossDSP

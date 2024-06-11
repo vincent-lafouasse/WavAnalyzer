@@ -5,4 +5,7 @@
 
 typedef std::complex<float> Complex;
 
+namespace PossDSP
+{
 std::vector<Complex> ugly_fft(const std::vector<float>& input);
+}
