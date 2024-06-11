@@ -10,8 +10,7 @@
 
 typedef std::complex<float> Complex;
 
-const char* wav_path = "./wav/nice_chord.wav";
-
+const char* wav_path = "./wav/long_a440_sine.wav";
 namespace Constants
 {
 [[maybe_unused]] const float pi = std::acos(-1);
@@ -148,11 +147,6 @@ struct SpectrogramData
                                     track.left.cbegin() + input_size);
         output = std::vector<double>(input_size);
 
-        const unsigned int plan_flags = FFTW_ESTIMATE;
-        const fftw_r2r_kind kind = FFTW_HC2R;
-        plan = fftw_plan_r2r_1d(input_size, &(input[0]), &(output[0]), kind,
-                                plan_flags);
-
         input_sample_rate = track.metadata.sample_rate;
         const double frequency_unit = input_sample_rate / input_size;
 
@@ -163,9 +157,17 @@ struct SpectrogramData
         n_bins = last_bin - first_bin;
     }
 
-    ~SpectrogramData() { fftw_destroy_plan(plan); };
+    ~SpectrogramData() {};
 
-    void execute_fft() { fftw_execute(plan); }
+    void execute_fftw3_NOT_MINE()
+    {
+        const unsigned int plan_flags = FFTW_ESTIMATE;
+        const fftw_r2r_kind kind = FFTW_HC2R;
+        fftw_plan plan = fftw_plan_r2r_1d(input_size, &(input[0]), &(output[0]),
+                                          kind, plan_flags);
+        fftw_execute(plan);
+        fftw_destroy_plan(plan);
+    }
     void write()
     {
         std::ofstream csv;
@@ -189,7 +191,6 @@ struct SpectrogramData
     std::vector<double> output;
     size_t input_size;
     float input_sample_rate;
-    fftw_plan plan;
     size_t first_bin;  // frequency offset, ignore below 20 Hz
     size_t n_bins;     // nnumber of frequency bins to fetch
 };
@@ -200,7 +201,7 @@ int main()
     Track track = Track::from_wav(wav_path);
 
     SpectrogramData fft_data(track);
-    fft_data.execute_fft();
+    fft_data.execute_fftw3_NOT_MINE();
     fft_data.write();
 
     /*
