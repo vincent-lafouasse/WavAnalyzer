@@ -162,7 +162,11 @@ struct SpectrogramData
             input_size, static_cast<size_t>(std::ceil(20000 / frequency_unit)));
         n_bins = last_bin - first_bin;
     }
+
     ~SpectrogramData() { fftw_destroy_plan(plan); };
+
+    void execute_fft() { fftw_execute(plan); }
+    void write() { write_to_csv(output, "fftw_fft.csv"); }
 
     std::vector<double> input;
     std::vector<double> output;
@@ -179,12 +183,7 @@ int main()
     Track track = Track::from_wav(wav_path);
 
     SpectrogramData fft_data(track);
-    log(fft_data.input_size, "input size");
-    log(fft_data.input.size(), "input size");
-    log(fft_data.output.size(), "input size");
-    log(fft_data.input_sample_rate, "sample rate");
-    log(fft_data.first_bin, "first bin");
-    log(fft_data.n_bins, "n bins");
+
 
     /*
     std::vector<float> dft_real = FFT_slice(signal, 0, N);
