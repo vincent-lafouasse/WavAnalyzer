@@ -24,7 +24,7 @@ def fetch_args():
         "--logx", help="set x scale to logarithmic", action="store_true"
     )
     parser.add_argument(
-        "--logy", help="set x scale to logarithmic", action="store_true"
+        "--logy", help="set y scale to logarithmic", action="store_true"
     )
 
     return parser.parse_args()
@@ -60,6 +60,9 @@ def plot_data(indices, values, args):
 
     if args.logx:
         ax.set_xscale("log")
+
+    if args.logy:
+        ax.set_yscale("log")
 
     ax.plot(indices, values)
     plt.show()
