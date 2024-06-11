@@ -8,7 +8,7 @@
 
 typedef std::complex<float> Complex;
 
-const char* wav_path = "./wav/a440_sine.wav";
+const char* wav_path = "./wav/long_a440_sine.wav";
 
 namespace Constants
 {
