@@ -124,14 +124,27 @@ void print_n(T object, size_t n)
         std::cout << object;
 }
 
+size_t crop_to_pow2(size_t sz)
+{
+    size_t power = 0;
+
+    while ((1 << power) < sz)
+        power++;
+
+    power -= 1;
+    return (1 << power);
+}
+
 int main()
 {
     std::cout << "Loading " << wav_path << "\n";
     Track track = Track::from_wav(wav_path);
     std::vector<float> signal = track.left;
+    const size_t N = crop_to_pow2(signal.size());
 
-    std::vector<float> dft_real = FFT_slice(signal, 0, signal.size());
+    std::vector<float> dft_real = FFT_slice(signal, 0, N);
     std::cout << "FFT Done\n";
+    write_to_csv(dft_real, "real_dft.csv");
 
     float mean_amplitude = mean(dft_real);
 
