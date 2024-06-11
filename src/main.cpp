@@ -148,19 +148,19 @@ int main()
 
     float mean_amplitude = mean(dft_real);
 
-    std::vector<size_t> dft_bucket_from_note{};
+    std::vector<size_t> bucket_indices{};
     size_t note = 0;
     while (Note(note).frequency() < 20000.0f)
     {
-        dft_bucket_from_note.push_back(
+        bucket_indices.push_back(
             Note(note).corresponding_frequency_bucket(
                 dft_real.size(), track.metadata.sample_rate));
         note++;
     }
 
-    for (size_t note = dft_bucket_from_note.size(); note > 0; note--)
+    for (size_t note = bucket_indices.size(); note > 0; note--)
     {
-        size_t bucket = dft_bucket_from_note.at(note - 1);
+        size_t bucket = bucket_indices.at(note - 1);
         size_t gain_from_mean =
             gain_amplitude(dft_real.at(bucket), mean_amplitude);
 
