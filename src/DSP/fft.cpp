@@ -23,8 +23,8 @@ std::vector<Complex> ugly_fft(const std::vector<Complex>& input)
 
     const size_t N = input.size();
 
-    std::vector<Complex> evens(N / 2);
-    std::vector<Complex> odds(N / 2);
+    std::vector<Complex> evens;
+    std::vector<Complex> odds;
     for (size_t i = 0; i < input.size(); i++)
     {
         if (i % 2 == 0)
