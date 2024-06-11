@@ -152,23 +152,39 @@ struct SpectrogramData
         const fftw_r2r_kind kind = FFTW_HC2R;
         plan = fftw_plan_r2r_1d(input_size, &(input[0]), &(output[0]), kind,
                                 plan_flags);
+
+        input_sample_rate = track.metadata.sample_rate;
+        const double frequency_unit = input_sample_rate / input_size;
+
+        first_bin = std::ceil(20.0 / frequency_unit);
+
+        const size_t last_bin = std::min(
+            input_size, static_cast<size_t>(std::ceil(20000 / frequency_unit)));
+        n_bins = last_bin - first_bin;
     }
-    ~SpectrogramData();
+    ~SpectrogramData() { fftw_destroy_plan(plan); };
 
     std::vector<double> input;
     std::vector<double> output;
     size_t input_size;
+    float input_sample_rate;
     fftw_plan plan;
-    int start_index;  // frequency offset, ignore below 20 Hz
-    int n_bins;       // nnumber of frequency bins to fetch
+    size_t first_bin;  // frequency offset, ignore below 20 Hz
+    size_t n_bins;     // nnumber of frequency bins to fetch
 };
 
 int main()
 {
     std::cout << "Loading " << wav_path << "\n";
     Track track = Track::from_wav(wav_path);
-    std::vector<float> signal = track.left;
-    const size_t N = crop_to_pow2(signal.size());
+
+    SpectrogramData fft_data(track);
+    log(fft_data.input_size, "input size");
+    log(fft_data.input.size(), "input size");
+    log(fft_data.output.size(), "input size");
+    log(fft_data.input_sample_rate, "sample rate");
+    log(fft_data.first_bin, "first bin");
+    log(fft_data.n_bins, "n bins");
 
     /*
     std::vector<float> dft_real = FFT_slice(signal, 0, N);
