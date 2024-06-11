@@ -31,13 +31,7 @@ SpectrumAnalyzer::SpectrumAnalyzer(const std::vector<float>& signal,
     output = std::vector<double>(input_size);
 
     input_sample_rate = sample_rate;
-    const double frequency_unit = input_sample_rate / input_size;
-
-    first_bin = std::ceil(20.0 / frequency_unit);
-
-    const size_t last_bin = std::min(
-        input_size, static_cast<size_t>(std::ceil(20000 / frequency_unit)));
-    n_bins = last_bin - first_bin;
+    frequency_unit = input_sample_rate / input_size;
 }
 
 SpectrumAnalyzer::~SpectrumAnalyzer() {};
@@ -59,7 +53,6 @@ void SpectrumAnalyzer::write(const char* name) const
 {
     std::ofstream csv;
     csv.open(name);
-    const double frequency_unit = input_sample_rate / input_size;
     for (size_t i = 0; i < input_size / 2; i++)
     {
         csv << frequency_unit * i << ",";
