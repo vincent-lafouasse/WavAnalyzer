@@ -21,16 +21,16 @@ def fetch_args():
         type=str,
         help="path to the csv file you want to plot",
     )
+    parser.add_argument("--xmin", help="set minimum x value", action="store")
+    parser.add_argument("--xmax", help="set maximum x value", action="store")
+    parser.add_argument("--ymin", help="set minimum y value", action="store")
+    parser.add_argument("--ymax", help="set maximum y value", action="store")
     parser.add_argument(
         "--logx", help="set x scale to logarithmic", action="store_true"
     )
     parser.add_argument(
         "--logy", help="set y scale to logarithmic", action="store_true"
     )
-    parser.add_argument("--ymin", help="set minimum y value", action="store")
-    parser.add_argument("--ymax", help="set maximum y value", action="store")
-    parser.add_argument("--xmin", help="set minimum x value", action="store")
-    parser.add_argument("--xmax", help="set maximum x value", action="store")
 
     return parser.parse_args()
 
