@@ -9,6 +9,9 @@ add_executable(WavAnalyzer)
 target_sources(WavAnalyzer PRIVATE
 	src/main.cpp
 
+	src/SpectrumAnalyzer.cpp
+	src/SpectrumAnalyzer.h
+
 	src/Track/Track.cpp
 	src/Track/Track.h
 	src/Track/play.cpp
