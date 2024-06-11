@@ -9,7 +9,7 @@
 static size_t crop_to_pow2(size_t sz);
 
 static float amplitude_at(float frequency,
-                          const std::vector<float>& amplitudes,
+                          const std::vector<double>& amplitudes,
                           float sample_rate)
 {
     float frequency_unit = sample_rate / amplitudes.size();
@@ -40,7 +40,7 @@ SpectrumAnalyzer::SpectrumAnalyzer(const std::vector<float>& signal,
     n_bins = last_bin - first_bin;
 }
 
-SpectrumAnalyzer::~SpectrumAnalyzer(){};
+SpectrumAnalyzer::~SpectrumAnalyzer() {};
 
 void SpectrumAnalyzer::execute_fft()
 {
@@ -72,6 +72,43 @@ void SpectrumAnalyzer::write(const char* name) const
     csv << std::endl;
     csv.close();
     std::cout << "fft csv written\n";
+}
+
+/*
+start * x^n = end
+x^n = end/start
+x =
+*/
+
+void SpectrumAnalyzer::write_sampled(const char* name) const
+{
+    const float start_frequency = 20.0;
+    const float end_frequency = 20000.0;
+    const size_t n_bins = 200;
+
+    const float multiplier = std::powf(end_frequency / start_frequency,
+                                       1 / static_cast<float>(n_bins));
+
+    std::ofstream csv;
+    csv.open(name);
+
+    float frequency = start_frequency;
+    while (frequency < end_frequency)
+    {
+        csv << frequency << ',';
+        frequency *= multiplier;
+    }
+    csv << '\n';
+
+    frequency = start_frequency;
+    while (frequency < end_frequency)
+    {
+        float amplitude = amplitude_at(frequency, output, input_sample_rate);
+        csv << dbFS(amplitude) << ',';
+        frequency *= multiplier;
+    }
+
+    csv.close();
 }
 
 static size_t crop_to_pow2(size_t sz)

@@ -10,6 +10,7 @@ struct SpectrumAnalyzer
     void execute_fft();
     void execute_fftw3_NOT_MINE();
     void write(const char*) const;
+    void write_sampled(const char*) const;
 
     std::vector<double> input;
     std::vector<double> output;

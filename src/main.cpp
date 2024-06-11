@@ -22,7 +22,7 @@ int main()
 
     SpectrumAnalyzer spectrum(track.left, track.metadata.sample_rate);
     spectrum.execute_fft();
-    spectrum.write("my_fft.csv");
+    spectrum.write_sampled("my_fft_sampled.csv");
 
     return EXIT_SUCCESS;
 }
