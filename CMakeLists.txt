@@ -39,6 +39,7 @@ target_include_directories(WavAnalyzer PUBLIC src)
 
 include(cmake/CPM.cmake)
 
+# only for monitoring by playback, no DSP is done with portaudio
 CPMAddPackage(
     NAME portaudio
     GITHUB_REPOSITORY PortAudio/portaudio
@@ -47,6 +48,7 @@ CPMAddPackage(
 target_include_directories(WavAnalyzer PUBLIC ${portaudio_SOURCE_DIR}/include)
 target_link_libraries(WavAnalyzer portaudio)
 
+# using fftw3 as a reference to strive towards and as a model API
 CPMAddPackage(
     NAME fftw3
     URL "http://fftw.org/fftw-3.3.10.tar.gz"
