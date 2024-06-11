@@ -35,10 +35,10 @@ void SpectrumAnalyzer::execute_fftw3_NOT_MINE()
     fftw_execute(plan);
     fftw_destroy_plan(plan);
 }
-void SpectrumAnalyzer::write()
+void SpectrumAnalyzer::write(const char* name) const
 {
     std::ofstream csv;
-    csv.open("fft.csv");
+    csv.open(name);
     const double frequency_unit = input_sample_rate / input_size;
     for (size_t i = 0; i < input_size / 2; i++)
     {

@@ -8,7 +8,7 @@ struct SpectrumAnalyzer
     ~SpectrumAnalyzer();
 
     void execute_fftw3_NOT_MINE();
-    void write();
+    void write(const char*) const;
 
     std::vector<double> input;
     std::vector<double> output;
