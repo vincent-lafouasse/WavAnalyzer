@@ -4,6 +4,7 @@
 #include <fstream>
 
 template <typename T>
+[[maybe_unused]]
 void log(T object, const char* name)
 {
     std::cout << name << " : " << object << '\n';
@@ -11,6 +12,7 @@ void log(T object, const char* name)
 }
 
 template <typename T>
+[[maybe_unused]]
 void write_to_csv(const std::vector<T>& data, const std::string& filename)
 {
     std::ofstream csv;
