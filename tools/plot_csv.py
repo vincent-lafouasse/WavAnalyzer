@@ -5,11 +5,12 @@ import argparse
 
 
 def main():
-    parser = argparse.ArgumentParser(description="plot csv")
+    parser = argparse.ArgumentParser(description="plot csv to monitor your data")
     parser.add_argument(
         "csv_path",
-        metavar="csv_path",
+        metavar="csv path",
         type=str,
+        help="path to the csv file you want to plot",
     )
 
     args = parser.parse_args()
