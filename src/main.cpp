@@ -75,10 +75,13 @@ std::vector<float> FFT_slice(const std::vector<float>& input,
                              size_t window_size)
 {
     assert(offset + window_size <= input.size());
-    std::vector<float> windowed_input{};
+
+    std::vector<float> windowed_input(window_size);
     for (size_t i = 0; i < window_size; i++)
-        windowed_input.push_back(window_function(i, window_size) *
-                                 input[offset + i]);
+    {
+        windowed_input[i] = input.at(offset + i);
+        windowed_input[i] *= window_function(i, window_size);
+    }
 
     std::vector<Complex> dft = FFT(windowed_input);
 
@@ -89,17 +92,41 @@ std::vector<float> FFT_slice(const std::vector<float>& input,
     return real_dft;
 }
 
+template <typename T>
+inline float mean(const std::vector<T>& v)
+{
+    return std::accumulate(v.cbegin(), v.cend(), 0) /
+           static_cast<float>(v.size());
+}
+
+size_t frequency_to_bucket(float frequency, size_t dft_size, float sample_rate)
+{
+    return frequency * sample_rate / dft_size;
+}
+
+float gain_amplitude(float amplitude, float reference)
+{
+    return std::round(20.0 * std::log10(amplitude / reference));
+}
+
+template <typename T>
+T percentile(std::vector<T> vec, float percent)
+{
+    std::sort(vec.begin(), vec.end());
+    size_t index = vec.size() * percent / 100.0;
+    return vec.at(index);
+}
+
 int main()
 {
+    std::cout << "Loading " << wav_path << "\n";
     Track track = Track::from_wav(wav_path);
     std::vector<float> signal = track.left;
 
     std::vector<float> dft_real = FFT_slice(signal, 0, signal.size());
     std::cout << "FFT Done\n";
 
-    float mean_amplitude =
-        std::accumulate(dft_real.cbegin(), dft_real.cend(), 0.0);
-    mean_amplitude /= dft_real.size();
+    float mean_amplitude = mean(dft_real);
 
     std::vector<size_t> dft_bucket_from_note{};
     size_t note = 0;
@@ -115,7 +142,7 @@ int main()
     {
         size_t bucket = dft_bucket_from_note.at(note - 1);
         size_t gain_from_mean =
-            std::round(20.0 * std::log10(dft_real.at(bucket) / mean_amplitude));
+            gain_amplitude(dft_real.at(bucket), mean_amplitude);
 
         if (gain_from_mean > 0)
         {
