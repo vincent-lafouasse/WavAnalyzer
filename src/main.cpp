@@ -170,6 +170,12 @@ struct SpectrogramData
     {
         std::ofstream csv;
         csv.open("fft.csv");
+        const double frequency_unit = input_sample_rate / input_size;
+        for (size_t i = 0; i < input_size / 2; i++)
+        {
+            csv << frequency_unit * i << ",";
+        }
+        csv << std::endl;
         for (size_t i = 0; i < input_size / 2; i++)
         {
             csv << output[i] << ",";
