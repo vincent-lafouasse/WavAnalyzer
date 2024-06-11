@@ -2,6 +2,8 @@
 #include "Track/Track.h"
 #include "log.hpp"
 
+#include "fftw3.h"
+
 #include <complex>
 #include <iostream>
 #include <numeric>

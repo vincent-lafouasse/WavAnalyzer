@@ -46,3 +46,11 @@ CPMAddPackage(
 )
 target_include_directories(WavAnalyzer PUBLIC ${portaudio_SOURCE_DIR}/include)
 target_link_libraries(WavAnalyzer portaudio)
+
+CPMAddPackage(
+    NAME fftw3
+    URL "http://fftw.org/fftw-3.3.10.tar.gz"
+    VERSION 3.3.10
+)
+target_include_directories(WavAnalyzer PUBLIC ${fftw3_SOURCE_DIR}/api)
+target_link_libraries(WavAnalyzer fftw3)
