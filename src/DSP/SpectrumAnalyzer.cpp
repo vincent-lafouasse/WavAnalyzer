@@ -4,6 +4,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <limits>
 
 static size_t crop_to_pow2(size_t sz);
 
@@ -37,6 +38,8 @@ void SpectrumAnalyzer::execute_fft()
         output.push_back(std::norm(dft[i]));
 }
 
+static float dbFS(float amplitude);
+
 void SpectrumAnalyzer::write(const char* name) const
 {
     std::ofstream csv;
@@ -49,7 +52,7 @@ void SpectrumAnalyzer::write(const char* name) const
     csv << std::endl;
     for (size_t i = 0; i < input_size / 2; i++)
     {
-        csv << output[i] << ",";
+        csv << dbFS(output[i]) << ",";
     }
     csv << std::endl;
     csv.close();
@@ -65,4 +68,10 @@ static size_t crop_to_pow2(size_t sz)
 
     power -= 1;
     return (1 << power);
+}
+
+static float dbFS(float amplitude)
+{
+    return 20.0f * (std::log10(amplitude) -
+                    std::log10(std::numeric_limits<float>::max()));
 }
