@@ -29,6 +29,8 @@ def fetch_args():
     )
     parser.add_argument("--ymin", help="set minimum y value", action="store")
     parser.add_argument("--ymax", help="set maximum y value", action="store")
+    parser.add_argument("--xmin", help="set minimum x value", action="store")
+    parser.add_argument("--xmax", help="set maximum x value", action="store")
 
     return parser.parse_args()
 
@@ -71,6 +73,17 @@ def plot_data(indices, values, args):
     elif args.ymax is not None:
         ymax = float(args.ymax)
         plt.ylim(top=ymax)
+
+    if args.xmin is not None and args.xmax is not None:
+        xmin = float(args.xmin)
+        xmax = float(args.xmax)
+        plt.xlim(left=xmin, right=xmax)
+    elif args.xmin is not None:
+        xmin = float(args.xmin)
+        plt.xlim(left=xmin)
+    elif args.xmax is not None:
+        xmax = float(args.xmax)
+        plt.xlim(right=xmax)
 
     if args.logx:
         ax.set_xscale("log")
