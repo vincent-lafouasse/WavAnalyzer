@@ -153,8 +153,8 @@ int main()
     while (Note(note).frequency() < 20000.0f)
     {
         bucket_indices.push_back(
-            Note(note).corresponding_frequency_bucket(
-                dft_real.size(), track.metadata.sample_rate));
+            frequency_to_bucket(Note(note).frequency(), dft_real.size(),
+                                track.metadata.sample_rate));
         note++;
     }
 
