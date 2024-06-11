@@ -12,11 +12,22 @@ def main():
         type=str,
         help="path to the csv file you want to plot",
     )
+    parser.add_argument(
+        "--logx", help="set x scale to logarithmic", action="store_true"
+    )
+    parser.add_argument(
+        "--logy", help="set x scale to logarithmic", action="store_true"
+    )
 
     args = parser.parse_args()
     print(f"Plotting {args.csv_path}")
 
-    with open(args.csv_path, "r") as file:
+    indices, values = fetch_data(args.csv_path)
+    plot_data(indices, values)
+
+
+def fetch_data(csv_path):
+    with open(csv_path, "r") as file:
         raw_data = file.read()
 
     lines = raw_data.strip("\n").split("\n")
@@ -37,6 +48,10 @@ def main():
         indices = np.array(data[0])
         values = np.array(data[1])
 
+    return indices, values
+
+
+def plot_data(indices, values):
     fig, ax = plt.subplots()
     ax.plot(indices, values)
     plt.show()
