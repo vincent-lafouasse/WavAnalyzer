@@ -10,7 +10,7 @@
 
 typedef std::complex<float> Complex;
 
-const char* wav_path = "./wav/long_a440_sine.wav";
+const char* wav_path = "./wav/nice_chord.wav";
 
 namespace Constants
 {
@@ -166,7 +166,18 @@ struct SpectrogramData
     ~SpectrogramData() { fftw_destroy_plan(plan); };
 
     void execute_fft() { fftw_execute(plan); }
-    void write() { write_to_csv(output, "fftw_fft.csv"); }
+    void write()
+    {
+        std::ofstream csv;
+        csv.open("fft.csv");
+        for (size_t i = 0; i < input_size / 2; i++)
+        {
+            csv << output[i] << ",";
+        }
+        csv << std::endl;
+        csv.close();
+        std::cout << "fft csv written\n";
+    }
 
     std::vector<double> input;
     std::vector<double> output;
