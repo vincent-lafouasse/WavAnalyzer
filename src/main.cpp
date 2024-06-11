@@ -144,6 +144,7 @@ int main()
     std::vector<float> signal = track.left;
     const size_t N = crop_to_pow2(signal.size());
 
+    /*
     std::vector<float> dft_real = FFT_slice(signal, 0, N);
     std::cout << "FFT Done\n";
     write_to_csv(dft_real, "real_dft.csv");
@@ -173,6 +174,7 @@ int main()
             std::cout << '\n';
         }
     }
+    */
 
     return EXIT_SUCCESS;
 }
