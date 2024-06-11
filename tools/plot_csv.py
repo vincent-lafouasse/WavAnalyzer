@@ -9,7 +9,7 @@ def main():
     indices, values = fetch_data(args.csv_path)
 
     print(f"Plotting {args.csv_path}")
-    plot_data(indices, values)
+    plot_data(indices, values, args)
 
 
 def fetch_args():
@@ -55,8 +55,12 @@ def fetch_data(csv_path):
     return indices, values
 
 
-def plot_data(indices, values):
+def plot_data(indices, values, args):
     fig, ax = plt.subplots()
+
+    if args.logx:
+        ax.set_xscale("log")
+
     ax.plot(indices, values)
     plt.show()
 
