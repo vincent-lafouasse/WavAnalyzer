@@ -9,12 +9,13 @@ add_executable(WavAnalyzer)
 target_sources(WavAnalyzer PRIVATE
 	src/main.cpp
 
-	src/SpectrumAnalyzer.cpp
-	src/SpectrumAnalyzer.h
-	src/fftw3_notmine.cpp
-
-	src/fft.cpp
-	src/fft.h
+	src/DSP/SpectrumAnalyzer.cpp
+	src/DSP/SpectrumAnalyzer.h
+	src/DSP/fftw3_notmine.cpp
+	src/DSP/fft.cpp
+	src/DSP/fft.h
+	src/DSP/Note.cpp
+	src/DSP/Note.h
 
 	src/Track/Track.cpp
 	src/Track/Track.h
@@ -29,9 +30,6 @@ target_sources(WavAnalyzer PRIVATE
 
 	src/OutputStream/OutputStream.cpp
 	src/OutputStream/OutputStream.h
-
-	src/Note.cpp
-	src/Note.h
 
 	src/types.cpp
 	src/types.h

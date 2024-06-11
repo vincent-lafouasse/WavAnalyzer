@@ -1,5 +1,5 @@
-#include "Note.h"
-#include "SpectrumAnalyzer.h"
+#include "DSP/Note.h"
+#include "DSP/SpectrumAnalyzer.h"
 #include "Track/Track.h"
 #include "log.hpp"
 
