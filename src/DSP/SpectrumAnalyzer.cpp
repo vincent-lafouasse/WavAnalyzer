@@ -75,6 +75,7 @@ x =
 
 void SpectrumAnalyzer::write_sampled(const char* name) const
 {
+    std::cout << "Writing " << name << '\n';
     const float start_frequency = 20.0;
     const float end_frequency = 20000.0;
     const size_t n_bins = 200;
@@ -102,6 +103,7 @@ void SpectrumAnalyzer::write_sampled(const char* name) const
     }
 
     csv.close();
+    std::cout << name << " written\n";
 }
 
 static size_t crop_to_pow2(size_t sz)

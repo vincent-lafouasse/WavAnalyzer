@@ -1,13 +1,11 @@
 #include "DSP/SpectrumAnalyzer.h"
 #include "Track/Track.h"
-#include "log.hpp"
 
 #include <complex>
 #include <iostream>
 
 typedef std::complex<float> Complex;
 
-const char* wav_path = "./wav/simple_chord.wav";
 namespace Constants
 {
 [[maybe_unused]] const float pi = std::acos(-1);
@@ -15,8 +13,15 @@ namespace Constants
 [[maybe_unused]] const Complex two_i_pi(0.0, 2 * pi);
 }  // namespace Constants
 
-int main()
+int main(int ac, char** av)
 {
+    if (ac != 2)
+    {
+        std::cout << "Usage: " << av[0] << " WAV_PATH\n";
+        std::exit(0);
+    }
+
+    const char* wav_path = av[1];
     std::cout << "Loading " << wav_path << "\n";
     Track track = Track::from_wav(wav_path);
 
