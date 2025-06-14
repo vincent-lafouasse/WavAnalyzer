@@ -16,6 +16,12 @@ namespace Constants {
 [[maybe_unused]] const Complex j(0.0, 1.0);
 }  // namespace Constants
 
+void fftRecurse(const Complex* in, Complex* out, usize size, usize step) {}
+
+void fft(const Complex* in, Complex* out, usize size) {
+    return fftRecurse(in, out, size, 1);
+}
+
 static constexpr int screenWidth = 1600;
 static constexpr int screenHeight = 900;
 
