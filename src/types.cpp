@@ -1,7 +1,6 @@
 #include "types.h"
 
-i64 Int24::to_i64() const
-{
+i64 Int24::to_i64() const {
     u32 buffer = 0;
 
     Byte third_byte = little_endian_bytes[2];

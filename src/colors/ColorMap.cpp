@@ -2,31 +2,23 @@
 
 #include <cmath>
 
-static u8 u8FromFloat(float x)
-{
-    if (x > 255.0f)
-    {
+static u8 u8FromFloat(float x) {
+    if (x > 255.0f) {
         return 255;
-    }
-    else if (x < 0.0f)
-    {
+    } else if (x < 0.0f) {
         return 0;
-    }
-    else
-    {
+    } else {
         return static_cast<u8>(std::floor(x));
     }
 }
 
-static u8 lerpU8(u8 start, u8 end, float x)
-{
+static u8 lerpU8(u8 start, u8 end, float x) {
     const float asFloat =
         static_cast<float>(start) * (1.0f - x) + static_cast<float>(end) * x;
     return u8FromFloat(asFloat);
 }
 
-static Rgb lerpRgb(Rgb start, Rgb end, float x)
-{
+static Rgb lerpRgb(Rgb start, Rgb end, float x) {
     return {
         lerpU8(start.red, end.red, x),
         lerpU8(start.green, end.green, x),
@@ -34,14 +26,11 @@ static Rgb lerpRgb(Rgb start, Rgb end, float x)
     };
 }
 
-Rgb ColorMap::get(float x) const
-{
-    if (x <= 0.0f)
-    {
+Rgb ColorMap::get(float x) const {
+    if (x <= 0.0f) {
         return colors.front();
     }
-    if (x >= 1.0f)
-    {
+    if (x >= 1.0f) {
         return colors.back();
     }
 
@@ -56,8 +45,7 @@ Rgb ColorMap::get(float x) const
 
 ColorMap::ColorMap(const std::vector<Rgb>& c) : colors(c) {}
 
-ColorMap ColorMap::Catpuccin()
-{
+ColorMap ColorMap::Catpuccin() {
     std::vector<Rgb> colors = {
         catpuccin::Blue,   /*catpuccin::Sapphire,*/ catpuccin::Sky,
         catpuccin::Teal,   catpuccin::Green,
@@ -68,8 +56,7 @@ ColorMap ColorMap::Catpuccin()
     return ColorMap(colors);
 }
 
-ColorMap ColorMap::Viridis()
-{
+ColorMap ColorMap::Viridis() {
     std::vector<Rgb> colors = {
         Rgb::fromHex(0xfde725), Rgb::fromHex(0xf1e51d), Rgb::fromHex(0xe5e419),
         Rgb::fromHex(0xd8e219), Rgb::fromHex(0xcae11f), Rgb::fromHex(0xbade28),
@@ -93,8 +80,7 @@ ColorMap ColorMap::Viridis()
     return ColorMap(colors);
 }
 
-ColorMap ColorMap::Inferno()
-{
+ColorMap ColorMap::Inferno() {
     std::vector<Rgb> colors = {
         Rgb::fromHex(0xfcffa4), Rgb::fromHex(0xf5f992), Rgb::fromHex(0xf2f27d),
         Rgb::fromHex(0xf2ea69), Rgb::fromHex(0xf4e156), Rgb::fromHex(0xf6d543),

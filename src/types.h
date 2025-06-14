@@ -17,8 +17,7 @@ typedef std::size_t usize;
 
 typedef u8 Byte;
 
-struct Int24
-{
+struct Int24 {
     i64 to_i64() const;
     double to_double() const;
 
