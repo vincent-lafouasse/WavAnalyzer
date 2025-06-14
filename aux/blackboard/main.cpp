@@ -7,7 +7,7 @@ using Complex = std::complex<float>;
 
 using usize = std::size_t;
 
-static constexpr usize bufferSize = 512;
+static constexpr usize bufferSize = 16;
 
 namespace Constants {
 [[maybe_unused]] static constexpr float pi = 3.14159265359f;
@@ -52,8 +52,8 @@ std::array<Complex, bufferSize> dft(
 std::array<Complex, bufferSize> makeInput() {
     std::array<float, bufferSize> realInput;
     for (usize i = 0; i < bufferSize; ++i) {
-        realInput[i] = std::sin(2.0f * Constants::pi * t(i));
-        realInput[i] = std::sin(3 * 2.0f * Constants::pi * t(i));
+        realInput[i] = std::sin(5 * 2.0f * Constants::pi * t(i));
+        realInput[i] += std::sin(3 * 2.0f * Constants::pi * t(i));
     }
 
     std::array<Complex, bufferSize> input;
