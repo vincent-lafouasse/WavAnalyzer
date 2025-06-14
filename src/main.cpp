@@ -55,12 +55,13 @@ int main(int ac, char** av) {
         UpdateMusicStream(music);
 
         const float x = std::clamp(rms.load(), 0.0f, 1.0f);
-        const int barHeight = static_cast<int>(x * screenHeight); 
+        const int barHeight = static_cast<int>(x * screenHeight);
         const int barWidth = 100;
 
         BeginDrawing();
         ClearBackground(catpuccin::DarkGray.opaque());
-        DrawRectangle(0, screenHeight - barHeight, barWidth, barHeight, cmap.get(x).opaque());
+        DrawRectangle(0, screenHeight - barHeight, barWidth, barHeight,
+                      cmap.get(x).opaque());
         EndDrawing();
     }
 
