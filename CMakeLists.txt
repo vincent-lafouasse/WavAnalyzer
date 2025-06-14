@@ -27,6 +27,7 @@ endif()
 add_executable(${PROJECT_NAME})
 target_sources(${PROJECT_NAME} PRIVATE
 	src/main.cpp
+        src/colors/ColorMap.cpp
 	src/types.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC src)
