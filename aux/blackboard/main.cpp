@@ -6,7 +6,7 @@ using Complex = std::complex<float>;
 
 using usize = std::size_t;
 
-static constexpr usize bufferSize = 64;
+static constexpr usize bufferSize = 512;
 
 namespace Constants {
 [[maybe_unused]] static constexpr float pi = 3.14159265359f;
@@ -24,7 +24,21 @@ Complex exponent(usize n, usize k, usize N) {
     return std::exp(-Constants::twoPiJ * temp);
 }
 
-int main() {
+namespace Naive {
+std::array<Complex, bufferSize> dft(
+    const std::array<Complex, bufferSize> input) {
+    std::array<Complex, bufferSize> complexFourier{};
+    for (usize i = 0; i < bufferSize; ++i) {
+        for (usize j = 0; j < bufferSize; ++j) {
+            complexFourier[i] += input[j] * exponent(i, j, bufferSize);
+        }
+    }
+
+    return complexFourier;
+}
+}  // namespace Naive
+
+std::array<Complex, bufferSize> makeInput() {
     std::array<float, bufferSize> realInput;
     for (usize i = 0; i < bufferSize; ++i) {
         realInput[i] = std::sin(2.0f * Constants::pi * t(i));
@@ -35,14 +49,15 @@ int main() {
     std::transform(realInput.cbegin(), realInput.cend(), input.begin(),
                    [](float f) { return f; });
 
-    std::array<Complex, bufferSize> complexFourier{};
-    for (usize i = 0; i < bufferSize; ++i) {
-        for (usize j = 0; j < bufferSize; ++j) {
-            complexFourier[i] += input[j] * exponent(i, j, bufferSize);
-        }
-    }
+    return input;
+}
+
+int main() {
+    std::array<Complex, bufferSize> input = makeInput();
+
+    std::array<Complex, bufferSize> dft = Naive::dft(input);
 
     for (usize i = 0; i < bufferSize / 2; ++i) {
-        std::cout << std::norm(complexFourier[i]) << '\n';
+        std::cout << std::norm(dft[i]) << '\n';
     }
 }
