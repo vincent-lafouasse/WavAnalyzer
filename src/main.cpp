@@ -1,6 +1,8 @@
 #include <complex>
 #include <iostream>
-#include "colors/Rgb.hpp"
+#include <numeric>
+
+#include "colors/ColorMap.hpp"
 
 #include <raylib.h>
 
@@ -15,6 +17,18 @@ namespace Constants {
 static constexpr int screenWidth = 1600;
 static constexpr int screenHeight = 900;
 
+std::atomic<float> rms = 0;
+
+void callback(void* buffer, u32 frames) {
+    const float* samples = static_cast<const float*>(buffer);
+
+    float squares = std::reduce(samples, samples + 2 * frames, 0.0f, [](float acc, float e) {
+        return acc + e * e;
+    });
+
+    rms.store(std::sqrt(squares));
+}
+
 int main(int ac, char** av) {
     if (ac != 2) {
         std::cout << "Usage: " << av[0] << " WAV_PATH\n";
@@ -24,18 +38,23 @@ int main(int ac, char** av) {
     SetConfigFlags(FLAG_MSAA_4X_HINT);  // Multisample Anti-Aliasing
 
     InitWindow(screenWidth, screenHeight, "spectrogram");
-    InitAudioDevice();
     SetTargetFPS(60);
+
+    InitAudioDevice();
+    AttachAudioMixedProcessor(callback);
 
     Music music = LoadMusicStream(av[1]);
     music.looping = false;
 
     PlayMusicStream(music);
 
+    ColorMap cmap = ColorMap::Viridis();
+
     while (!WindowShouldClose()) {
         UpdateMusicStream(music);
+
         BeginDrawing();
-        ClearBackground(catpuccin::DarkGray.opaque());
+        ClearBackground(cmap.get(rms.load()).opaque());
         EndDrawing();
     }
 
