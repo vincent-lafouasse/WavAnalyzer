@@ -13,31 +13,31 @@ typedef std::complex<float> Complex;
 
 namespace Constants {
 [[maybe_unused]] const float pi = std::acos(-1);
-[[maybe_unused]] const Complex imaginary_unit(0.0, 1.0);
-[[maybe_unused]] const Complex two_i_pi(0.0, 2 * pi);
+[[maybe_unused]] const Complex j(0.0, 1.0);
 }  // namespace Constants
 
 static constexpr int screenWidth = 1600;
 static constexpr int screenHeight = 900;
 
-static constexpr usize fftBufferSize = 1024;
+static constexpr usize bufferSize = 1024;
 
-std::array<float, fftBufferSize> fftBuffer{};
-usize fftBufferIndex = 0;
+std::array<float, bufferSize> globalBuffer{};
 std::atomic<bool> bufferIsReady = false;
 
 void callback(void* buffer, u32 frames) {
     const float* samples = static_cast<const float*>(buffer);
 
+    static usize bufferIndex = 0;
+
     if (!bufferIsReady.load()) {
         for (usize i = 0; i < frames; ++i) {
             const float sample = samples[2 * i];
-            fftBuffer[fftBufferIndex] = sample;
-            ++fftBufferIndex;
+            globalBuffer[bufferIndex] = sample;
+            ++bufferIndex;
 
-            if (fftBufferIndex == fftBufferSize) {
+            if (bufferIndex == bufferSize) {
                 bufferIsReady.store(true);
-                fftBufferIndex = 0;
+                bufferIndex = 0;
                 break;
             }
         }
@@ -65,7 +65,7 @@ int main(int ac, char** av) {
 
     ColorMap cmap = ColorMap::Viridis();
 
-    std::array<float, fftBufferSize> localBuffer{};
+    std::array<float, bufferSize> localBuffer{};
 
     while (!WindowShouldClose()) {
         UpdateMusicStream(music);
@@ -77,13 +77,13 @@ int main(int ac, char** av) {
         };
 
         if (bufferIsReady.load()) {
-            localBuffer = fftBuffer;
+            localBuffer = globalBuffer;
             bufferIsReady.store(false);
         }
 
         BeginDrawing();
         ClearBackground(catpuccin::DarkGray.opaque());
-        for (usize i = 0; i < fftBufferSize; ++i) {
+        for (usize i = 0; i < bufferSize; ++i) {
             DrawPixel(i, floatToHeight(localBuffer[i]),
                       catpuccin::Pink.opaque());
         }
