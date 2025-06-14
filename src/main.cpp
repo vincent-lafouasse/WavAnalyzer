@@ -37,6 +37,7 @@ void callback(void* buffer, u32 frames) {
 
             if (fftBufferIndex == fftBufferSize) {
                 bufferIsReady.store(true);
+                fftBufferIndex = 0;
                 break;
             }
         }
@@ -64,6 +65,8 @@ int main(int ac, char** av) {
 
     ColorMap cmap = ColorMap::Viridis();
 
+    std::array<float, fftBufferSize> localBuffer{};
+
     while (!WindowShouldClose()) {
         UpdateMusicStream(music);
 
@@ -73,13 +76,16 @@ int main(int ac, char** av) {
             return static_cast<int>(f * screenHeight);
         };
 
+        if (bufferIsReady.load()) {
+            localBuffer = fftBuffer;
+            bufferIsReady.store(false);
+        }
+
         BeginDrawing();
         ClearBackground(catpuccin::DarkGray.opaque());
-        if (bufferIsReady.load()) {
-            for (usize i = 0; i < fftBufferSize; ++i) {
-                DrawPixel(i, floatToHeight(fftBuffer[i]),
-                          catpuccin::Pink.opaque());
-            }
+        for (usize i = 0; i < fftBufferSize; ++i) {
+            DrawPixel(i, floatToHeight(localBuffer[i]),
+                      catpuccin::Pink.opaque());
         }
         EndDrawing();
     }
