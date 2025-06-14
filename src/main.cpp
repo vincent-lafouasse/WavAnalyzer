@@ -21,15 +21,26 @@ int main(int ac, char** av) {
         std::exit(0);
     }
 
+    SetConfigFlags(FLAG_MSAA_4X_HINT);  // Multisample Anti-Aliasing
+
     InitWindow(screenWidth, screenHeight, "spectrogram");
+    InitAudioDevice();
     SetTargetFPS(60);
 
+    Music music = LoadMusicStream(av[1]);
+    music.looping = false;
+
+    PlayMusicStream(music);
+
     while (!WindowShouldClose()) {
+        UpdateMusicStream(music);
         BeginDrawing();
         ClearBackground(catpuccin::DarkGray.opaque());
         EndDrawing();
     }
 
+    UnloadMusicStream(music);
+    CloseAudioDevice();
     CloseWindow();
 
     return EXIT_SUCCESS;
