@@ -1,6 +1,6 @@
 **/**.csv
 .cache
 build
-aux/
 .DS_Store
 **/**.asd
+**/exe
