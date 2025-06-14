@@ -1,6 +1,3 @@
-#include "DSP/SpectrumAnalyzer.h"
-#include "Track/Track.h"
-
 #include <complex>
 #include <iostream>
 
@@ -23,11 +20,6 @@ int main(int ac, char** av)
 
     const char* wav_path = av[1];
     std::cout << "Loading " << wav_path << "\n";
-    Track track = Track::from_wav(wav_path);
-
-    SpectrumAnalyzer spectrum(track.left, track.metadata.sample_rate);
-    spectrum.execute_fft();
-    spectrum.write_sampled("my_fft_sampled.csv");
 
     return EXIT_SUCCESS;
 }
