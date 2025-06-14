@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <complex>
 #include <iostream>
 #include <numeric>
@@ -19,15 +20,27 @@ namespace Constants {
 static constexpr int screenWidth = 1600;
 static constexpr int screenHeight = 900;
 
-std::atomic<float> rms = 0;
+static constexpr usize fftBufferSize = 1024;
+
+std::array<float, fftBufferSize> fftBuffer{};
+usize fftBufferIndex = 0;
+std::atomic<bool> bufferIsReady = false;
 
 void callback(void* buffer, u32 frames) {
     const float* samples = static_cast<const float*>(buffer);
 
-    float squares = std::reduce(samples, samples + 2 * frames, 0.0f,
-                                [](float acc, float e) { return acc + e * e; });
+    if (!bufferIsReady.load()) {
+        for (usize i = 0; i < frames; ++i) {
+            const float sample = samples[2 * i];
+            fftBuffer[fftBufferIndex] = sample;
+            ++fftBufferIndex;
 
-    rms.store(std::sqrt(squares));
+            if (fftBufferIndex == fftBufferSize) {
+                bufferIsReady.store(true);
+                break;
+            }
+        }
+    }
 }
 
 int main(int ac, char** av) {
@@ -54,14 +67,20 @@ int main(int ac, char** av) {
     while (!WindowShouldClose()) {
         UpdateMusicStream(music);
 
-        const float x = std::clamp(rms.load(), 0.0f, 1.0f);
-        const int barHeight = static_cast<int>(x * screenHeight);
-        const int barWidth = 100;
+        auto floatToHeight = [&](float f) {
+            f = std::clamp(f, -1.0f, 1.0f);
+            f = 0.5f * (f + 1.0f);
+            return static_cast<int>(f * screenHeight);
+        };
 
         BeginDrawing();
         ClearBackground(catpuccin::DarkGray.opaque());
-        DrawRectangle(0, screenHeight - barHeight, barWidth, barHeight,
-                      cmap.get(x).opaque());
+        if (bufferIsReady.load()) {
+            for (usize i = 0; i < fftBufferSize; ++i) {
+                DrawPixel(i, floatToHeight(fftBuffer[i]),
+                          catpuccin::Pink.opaque());
+            }
+        }
         EndDrawing();
     }
 
