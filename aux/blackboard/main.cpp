@@ -1,6 +1,7 @@
 #include <cmath>
 #include <complex>
 #include <iostream>
+#include <fstream>
 
 using Complex = std::complex<float>;
 
@@ -13,6 +14,16 @@ namespace Constants {
 [[maybe_unused]] static constexpr Complex j = {0, 1};
 [[maybe_unused]] static constexpr Complex twoPiJ = 2.0f * pi * j;
 }  // namespace Constants
+
+template<class It>
+void writeToCsv(It start, It end, const char* filename) {
+    std::ofstream outfile(filename);
+
+    for (It it = start; it != end; ++it) {
+        outfile << *it << ',';
+    }
+    outfile << '\n';
+}
 
 float t(usize i) {
     return static_cast<float>(i) / bufferSize;
@@ -55,9 +66,12 @@ std::array<Complex, bufferSize> makeInput() {
 int main() {
     std::array<Complex, bufferSize> input = makeInput();
 
-    std::array<Complex, bufferSize> dft = Naive::dft(input);
+    std::array<Complex, bufferSize> complexDft = Naive::dft(input);
 
-    for (usize i = 0; i < bufferSize / 2; ++i) {
-        std::cout << std::norm(dft[i]) << '\n';
+    std::array<float, bufferSize / 2> spectrum;
+    for (usize i = 0; i < spectrum.size(); ++i) {
+        spectrum[i] = std::norm(complexDft[i]);
     }
+
+    writeToCsv(spectrum.cbegin(), spectrum.cend(), "dft.csv");
 }
