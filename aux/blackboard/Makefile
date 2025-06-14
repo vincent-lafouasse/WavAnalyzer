@@ -6,6 +6,7 @@ all: build
 
 build: exe
 
-exe:
+exe: main.cpp
 	$(CXX) $(CXXFLAGS) main.cpp -o exe
 
+.PHONY: all build
