@@ -6,8 +6,7 @@ using Complex = std::complex<float>;
 
 using usize = std::size_t;
 
-static constexpr usize bufferSize = 8;
-
+static constexpr usize bufferSize = 64;
 
 namespace Constants {
 [[maybe_unused]] static constexpr float pi = 3.14159265359f;
@@ -29,6 +28,7 @@ int main() {
     std::array<float, bufferSize> realInput;
     for (usize i = 0; i < bufferSize; ++i) {
         realInput[i] = std::sin(2.0f * Constants::pi * t(i));
+        realInput[i] = std::sin(3 * 2.0f * Constants::pi * t(i));
     }
 
     std::array<Complex, bufferSize> input;
@@ -42,7 +42,7 @@ int main() {
         }
     }
 
-    for (Complex z: complexFourier) {
-        std::cout << std::norm(z) << '\n';
+    for (usize i = 0; i < bufferSize / 2; ++i) {
+        std::cout << std::norm(complexFourier[i]) << '\n';
     }
 }
