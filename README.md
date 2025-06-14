@@ -2,7 +2,7 @@
 
 ## references
 
-- https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
+- [An Algorithm for the Machine Calculation of Complex Fourier Series By James W. Cooley and John W. Tukey](https://www.ams.org/journals/mcom/1965-19-090/S0025-5718-1965-0178586-1/S0025-5718-1965-0178586-1.pdf)
 - https://en.wikipedia.org/wiki/Short-time_Fourier_transform
 - https://zipcpu.com/dsp/2020/11/21/spectrogram.html
 - https://github.com/audacity/audacity/blob/master/src/SpectrumAnalyst.cpp#L91
