@@ -1,8 +1,10 @@
+#include <algorithm>
 #include <complex>
 #include <iostream>
 #include <numeric>
 
 #include "colors/ColorMap.hpp"
+#include "colors/Rgb.hpp"
 
 #include <raylib.h>
 
@@ -22,9 +24,8 @@ std::atomic<float> rms = 0;
 void callback(void* buffer, u32 frames) {
     const float* samples = static_cast<const float*>(buffer);
 
-    float squares = std::reduce(samples, samples + 2 * frames, 0.0f, [](float acc, float e) {
-        return acc + e * e;
-    });
+    float squares = std::reduce(samples, samples + 2 * frames, 0.0f,
+                                [](float acc, float e) { return acc + e * e; });
 
     rms.store(std::sqrt(squares));
 }
@@ -53,8 +54,13 @@ int main(int ac, char** av) {
     while (!WindowShouldClose()) {
         UpdateMusicStream(music);
 
+        const float x = std::clamp(rms.load(), 0.0f, 1.0f);
+        const int barHeight = static_cast<int>(x * screenHeight); 
+        const int barWidth = 100;
+
         BeginDrawing();
-        ClearBackground(cmap.get(rms.load()).opaque());
+        ClearBackground(catpuccin::DarkGray.opaque());
+        DrawRectangle(0, screenHeight - barHeight, barWidth, barHeight, cmap.get(x).opaque());
         EndDrawing();
     }
 
