@@ -27,7 +27,8 @@ int main(int ac, char** av)
     InitWindow(screenWidth, screenHeight, "spectrogram");
     SetTargetFPS(60);
 
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose())
+    {
         BeginDrawing();
         ClearBackground(catpuccin::DarkGray.opaque());
         EndDrawing();
