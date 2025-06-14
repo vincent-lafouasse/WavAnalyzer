@@ -1,5 +1,8 @@
 #include <complex>
 #include <iostream>
+#include "colors/Rgb.hpp"
+
+#include <raylib.h>
 
 typedef std::complex<float> Complex;
 
@@ -10,6 +13,9 @@ namespace Constants
 [[maybe_unused]] const Complex two_i_pi(0.0, 2 * pi);
 }  // namespace Constants
 
+static constexpr int screenWidth = 1600;
+static constexpr int screenHeight = 900;
+
 int main(int ac, char** av)
 {
     if (ac != 2)
@@ -18,8 +24,16 @@ int main(int ac, char** av)
         std::exit(0);
     }
 
-    const char* wav_path = av[1];
-    std::cout << "Loading " << wav_path << "\n";
+    InitWindow(screenWidth, screenHeight, "spectrogram");
+    SetTargetFPS(60);
+
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(catpuccin::DarkGray.opaque());
+        EndDrawing();
+    }
+
+    CloseWindow();
 
     return EXIT_SUCCESS;
 }
