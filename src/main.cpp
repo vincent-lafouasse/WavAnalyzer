@@ -17,8 +17,28 @@ namespace Constants {
 }  // namespace Constants
 
 namespace OutOfPlace {
-std::vector<Complex> fftRecurse(const std::vector<Complex>& input) {
-    return {};
+std::vector<Complex> fftRecurse(const Complex* input, usize size, usize step) {
+    if (size == 1) {
+        return {input[0]};
+    }
+
+    const std::vector<Complex> evens = fftRecurse(input, size / 2, 2 * step);
+    const std::vector<Complex> odds =
+        fftRecurse(input + step, size / 2, 2 * step);
+
+    std::vector<Complex> out(size, 0);
+    for (usize i = 0; i < size / 2; ++i) {
+        const Complex e_i = input[i];
+        const Complex o_i =
+            input[i + size / 2] *
+            std::exp(-Constants::j *
+                     static_cast<Complex>(2.0 * Constants::pi * i / size));
+
+        out[i] = e_i + o_i;
+        out[i + size / 2] = e_i - o_i;
+    }
+
+    return out;
 }
 
 std::vector<float> fft(const float* input, usize size) {
@@ -26,7 +46,7 @@ std::vector<float> fft(const float* input, usize size) {
     std::transform(input, input + size, complexInput.begin(),
                    [](float e) { return e; });
 
-    std::vector<Complex> complexFourier = fftRecurse(complexInput);
+    std::vector<Complex> complexFourier = fftRecurse(&complexInput[0], size, 1);
 
     std::vector<float> out(size, 0);
     std::transform(complexFourier.cbegin(), complexFourier.cend(), out.begin(),
@@ -87,26 +107,34 @@ int main(int ac, char** av) {
     ColorMap cmap = ColorMap::Viridis();
 
     std::array<float, bufferSize> localBuffer{};
+    std::vector<float> fft(0, bufferSize);
+
+    bool didTheThing = false;
 
     while (!WindowShouldClose()) {
         UpdateMusicStream(music);
 
-        auto floatToHeight = [&](float f) {
-            f = std::clamp(f, -1.0f, 1.0f);
-            f = 0.5f * (f + 1.0f);
-            return static_cast<int>(f * screenHeight);
-        };
-
-        if (bufferIsReady.load()) {
+        if (bufferIsReady.load() && !didTheThing) {
             localBuffer = globalBuffer;
             bufferIsReady.store(false);
+            fft = OutOfPlace::fft(&localBuffer[0], bufferSize);
+            for (float f : fft) {
+                std::cout << f << ",";
+            }
+            std::cout << '\n';
+            didTheThing = true;
         }
+
+        auto floatToHeight = [&](float f) {
+            return static_cast<int>((1.0f - f) * screenHeight);
+        };
 
         BeginDrawing();
         ClearBackground(catpuccin::DarkGray.opaque());
-        for (usize i = 0; i < bufferSize; ++i) {
-            DrawPixel(i, floatToHeight(localBuffer[i]),
-                      catpuccin::Pink.opaque());
+        if (didTheThing) {
+            for (usize i = 0; i < bufferSize; ++i) {
+                DrawPixel(i, floatToHeight(fft[i]), catpuccin::Pink.opaque());
+            }
         }
         EndDrawing();
     }
