@@ -1,5 +1,6 @@
 #include <array>
 #include <iostream>
+#include <iterator>
 
 #include "colors/ColorMap.hpp"
 #include "fft.h"
@@ -13,6 +14,25 @@ static constexpr usize bufferSize = 4096;
 
 std::array<float, bufferSize> globalBuffer{};
 std::atomic<bool> bufferIsReady = false;
+
+template <class It>
+It findMax(It start, It end) {
+    if (start == end) {
+        return end;
+    }
+
+    auto maxValue = *start++;
+    It maxPos = start;
+
+    while (start != end) {
+        if (maxValue < *start) {
+            maxValue = *start;
+            maxPos = start;
+        }
+    }
+
+    return maxPos;
+}
 
 void callback(void* buffer, u32 frames) {
     const float* samples = static_cast<const float*>(buffer);
