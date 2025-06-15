@@ -136,6 +136,7 @@ int main(int ac, char** av) {
                 DrawPixel(i, floatToHeight(fft[i]), catpuccin::Pink.opaque());
             }
         }
+        DrawFPS(0, 0);
         EndDrawing();
     }
 
