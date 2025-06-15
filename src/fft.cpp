@@ -4,7 +4,6 @@
 
 #include "constants.h"
 
-
 Complex nthRootOfUnity(usize n) {
     assert(n > 0);
 
