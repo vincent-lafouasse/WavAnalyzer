@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <complex>
 
 typedef uint8_t u8;
 typedef uint16_t u16;
@@ -17,9 +18,5 @@ typedef std::size_t usize;
 
 typedef u8 Byte;
 
-struct Int24 {
-    i64 to_i64() const;
-    double to_double() const;
-
-    std::array<Byte, 3> little_endian_bytes;
-};
+typedef float Float;
+typedef std::complex<Float> Complex;
