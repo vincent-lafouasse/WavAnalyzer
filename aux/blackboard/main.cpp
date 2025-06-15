@@ -80,9 +80,7 @@ int main() {
     std::array<Complex, bufferSize> complexDft = Naive::dft(input);
 
     std::array<float, bufferSize / 2> spectrum;
-    for (usize i = 0; i < spectrum.size(); ++i) {
-        spectrum[i] = std::norm(complexDft[i]);
-    }
+    std::transform(complexDft.cbegin(), complexDft.cbegin() + bufferSize / 2, spectrum.begin(), std::norm);
 
     writeToCsv(spectrum.cbegin(), spectrum.cend(), "dft.csv");
 }
