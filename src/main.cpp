@@ -30,7 +30,7 @@ std::vector<Complex> fftRecurse(const Complex* input, usize size, usize step) {
     for (usize i = 0; i < size / 2; ++i) {
         const Complex e_i = input[i * step];
         const Complex o_i =
-            input[i * step + size / 2] *
+            input[step * (i + size / 2)] *
             std::exp(-Constants::j *
                      static_cast<Complex>(2.0 * Constants::pi * i / size));
 
