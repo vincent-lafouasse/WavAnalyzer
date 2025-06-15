@@ -59,8 +59,9 @@ std::vector<float> fft(const float* input, usize size) {
 
     std::vector<Complex> complexFourier = fftRecurse(&complexInput[0], size, 1);
 
-    std::vector<float> out(size, 0);
-    std::transform(complexFourier.cbegin(), complexFourier.cend(), out.begin(),
+    const usize sz = size / 2;
+    std::vector<float> out(sz, 0);
+    std::transform(complexFourier.cbegin(), complexFourier.cbegin() + sz, out.begin(),
                    [](Complex z) { return std::norm(z); });
 
     return out;
