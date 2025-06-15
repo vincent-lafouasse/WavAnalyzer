@@ -1,13 +1,14 @@
 #include <cmath>
 #include <complex>
-#include <iostream>
+#include <cstdlib>
+#include <ctime>
 #include <fstream>
 
 using Complex = std::complex<float>;
 
 using usize = std::size_t;
 
-static constexpr usize bufferSize = 16;
+static constexpr usize bufferSize = 64;
 
 namespace Constants {
 [[maybe_unused]] static constexpr float pi = 3.14159265359f;
@@ -15,7 +16,7 @@ namespace Constants {
 [[maybe_unused]] static constexpr Complex twoPiJ = 2.0f * pi * j;
 }  // namespace Constants
 
-template<class It>
+template <class It>
 void writeToCsv(It start, It end, const char* filename) {
     std::ofstream outfile(filename);
 
@@ -50,11 +51,21 @@ std::array<Complex, bufferSize> dft(
 }  // namespace Naive
 
 std::array<Complex, bufferSize> makeInput() {
+    srand(static_cast<unsigned>(time(0)));
+    static constexpr float noiseAmp = 0.05f;
+
     std::array<float, bufferSize> realInput;
     for (usize i = 0; i < bufferSize; ++i) {
         realInput[i] = std::sin(5 * 2.0f * Constants::pi * t(i));
         realInput[i] += std::sin(3 * 2.0f * Constants::pi * t(i));
+        const float noise =
+            (-noiseAmp) +
+            static_cast<float>(rand()) /
+                (static_cast<float>(RAND_MAX / (2.0f * noiseAmp)));
+        realInput[i] += noise;
     }
+
+    writeToCsv(realInput.cbegin(), realInput.cend(), "input.csv");
 
     std::array<Complex, bufferSize> input;
     std::transform(realInput.cbegin(), realInput.cend(), input.begin(),
