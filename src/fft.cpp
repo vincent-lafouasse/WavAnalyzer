@@ -61,8 +61,8 @@ std::vector<float> fft(const float* input, usize size) {
 
     const usize sz = size / 2;
     std::vector<float> out(sz, 0);
-    std::transform(complexFourier.cbegin(), complexFourier.cbegin() + sz, out.begin(),
-                   [](Complex z) { return std::norm(z); });
+    std::transform(complexFourier.cbegin(), complexFourier.cbegin() + sz,
+                   out.begin(), [](Complex z) { return std::norm(z); });
 
     return out;
 }
