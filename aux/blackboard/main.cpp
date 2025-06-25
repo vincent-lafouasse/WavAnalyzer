@@ -4,6 +4,9 @@
 #include <ctime>
 #include <fstream>
 
+#include <algorithm>
+#include <array>
+
 using Complex = std::complex<float>;
 
 using usize = std::size_t;
@@ -24,10 +27,6 @@ void writeToCsv(It start, It end, const char* filename) {
         outfile << *it << ',';
     }
     outfile << '\n';
-}
-
-float t(usize i) {
-    return static_cast<float>(i) / bufferSize;
 }
 
 Complex exponent(usize n, usize k, usize N) {
@@ -52,12 +51,14 @@ std::array<Complex, bufferSize> dft(
 
 std::array<Complex, bufferSize> makeInput() {
     srand(static_cast<unsigned>(time(0)));
-    static constexpr float noiseAmp = 0.05f;
+    static constexpr float noiseAmp = 0.0f;
+
+    static constexpr float omega0 = 2.0f * Constants::pi / bufferSize;
 
     std::array<float, bufferSize> realInput;
     for (usize i = 0; i < bufferSize; ++i) {
-        realInput[i] = std::sin(5 * 2.0f * Constants::pi * t(i));
-        realInput[i] += std::sin(3 * 2.0f * Constants::pi * t(i));
+        realInput[i] = std::sin(5 * omega0 * i);
+        realInput[i] += std::sin(3 * omega0 * i);
         const float noise =
             (-noiseAmp) +
             static_cast<float>(rand()) /
@@ -80,7 +81,9 @@ int main() {
     std::array<Complex, bufferSize> complexDft = Naive::dft(input);
 
     std::array<float, bufferSize / 2> spectrum;
-    std::transform(complexDft.cbegin(), complexDft.cbegin() + bufferSize / 2, spectrum.begin(), std::norm);
+    std::transform(complexDft.cbegin(), complexDft.cbegin() + bufferSize / 2,
+                   spectrum.begin(),
+                   [](const auto& e) { return std::norm(e); });
 
     writeToCsv(spectrum.cbegin(), spectrum.cend(), "dft.csv");
 }
