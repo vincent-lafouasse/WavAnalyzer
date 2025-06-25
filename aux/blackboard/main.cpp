@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
+#include <iostream>
 
 #include <algorithm>
 #include <array>
@@ -86,6 +87,10 @@ int main() {
     std::transform(complexDft.cbegin() + 1, complexDft.cbegin() + bufferSize / 2,
                    spectrum.begin(),
                    [](const auto& e) { return std::norm(e); });
+
+    for (usize i = 0; i < spectrum.size(); ++i) {
+        std::clog << i + 1 << ":\t" << spectrum[i] << '\n';
+    }
 
     writeToCsv(spectrum.cbegin(), spectrum.cend(), "dft.csv");
 }
