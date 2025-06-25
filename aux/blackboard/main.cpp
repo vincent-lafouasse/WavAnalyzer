@@ -81,8 +81,9 @@ int main() {
 
     std::array<Complex, bufferSize> complexDft = Naive::dft(input);
 
-    std::array<float, bufferSize / 2> spectrum;
-    std::transform(complexDft.cbegin(), complexDft.cbegin() + bufferSize / 2,
+    static constexpr usize spectrumSize = (bufferSize / 2) - 1;
+    std::array<float, spectrumSize> spectrum;
+    std::transform(complexDft.cbegin() + 1, complexDft.cbegin() + bufferSize / 2,
                    spectrum.begin(),
                    [](const auto& e) { return std::norm(e); });
 
