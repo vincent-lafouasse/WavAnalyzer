@@ -54,11 +54,12 @@ std::array<Complex, bufferSize> makeInput() {
     static constexpr float noiseAmp = 0.0f;
 
     static constexpr float omega0 = 2.0f * Constants::pi / bufferSize;
+    auto omega = [](auto k) { return static_cast<float>(omega0 * k); };
 
     std::array<float, bufferSize> realInput;
     for (usize i = 0; i < bufferSize; ++i) {
-        realInput[i] = std::sin(5 * omega0 * i);
-        realInput[i] += std::sin(3 * omega0 * i);
+        realInput[i] = std::sin(omega(1) * i);
+        realInput[i] += std::sin(omega(3) * i);
         const float noise =
             (-noiseAmp) +
             static_cast<float>(rand()) /
