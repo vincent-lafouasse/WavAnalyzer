@@ -84,8 +84,8 @@ int main() {
 
     static constexpr usize spectrumSize = (bufferSize / 2) - 1;
     std::array<float, spectrumSize> spectrum;
-    std::transform(complexDft.cbegin() + 1, complexDft.cbegin() + bufferSize / 2,
-                   spectrum.begin(),
+    std::transform(complexDft.cbegin() + 1,
+                   complexDft.cbegin() + bufferSize / 2, spectrum.begin(),
                    [](const auto& e) { return std::norm(e); });
 
     for (usize i = 0; i < spectrum.size(); ++i) {
