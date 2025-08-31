@@ -1,6 +1,7 @@
 #include "fft.h"
 
 #include <cassert>
+#include <vector>
 
 #include "constants.h"
 
