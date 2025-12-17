@@ -29,7 +29,6 @@ Complex cPow(Complex z, usize n) {
     }
 }
 
-namespace OutOfPlace {
 std::vector<Complex> fftRecurse(const Complex* input, usize size, usize step) {
     if (size == 1) {
         return {input[0]};
@@ -53,19 +52,8 @@ std::vector<Complex> fftRecurse(const Complex* input, usize size, usize step) {
     return out;
 }
 
-std::vector<float> fft(const float* input, usize size) {
-    std::vector<Complex> complexInput(size, 0);
-    std::transform(input, input + size, complexInput.begin(),
-                   [](float e) { return e; });
-
-    std::vector<Complex> complexFourier = fftRecurse(&complexInput[0], size, 1);
-
-    const usize sz = size / 2;
-    std::vector<float> out(sz, 0);
-    std::transform(complexFourier.cbegin(), complexFourier.cbegin() + sz,
-                   out.begin(), [](Complex z) { return std::norm(z); });
-
-    return out;
+namespace fft {
+std::vector<Complex> forward(const std::vector<Complex>& input) {
+    return fftRecurse(input.data(), input.size(), 1);
 }
-
-}  // namespace OutOfPlace
+}
